@@ -1,0 +1,394 @@
+{
+  "info": {
+    "name": "Spike Application User API",
+    "description": "Spike (Spike Technologies) unified health and wearables data API. A single integration layer connecting an application to 500+ wearables, IoT devices, CGMs, EMRs, labs, and nutrition sources (Apple Health, Garmin, Fitbit, Oura, Whoop, Dexcom, Withings, and more). Authenticate end users with HMAC-SHA256 to mint a JWT, connect providers via hosted integration flows, then query normalized health data. Base URL: https://app-api.spikeapi.com/v3. All data requests require a Bearer JWT.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      { "key": "token", "value": "{{bearerToken}}", "type": "string" }
+    ]
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "https://app-api.spikeapi.com/v3", "type": "string" },
+    { "key": "bearerToken", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Authenticate with HMAC signature",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"application_id\": \"\",\n  \"application_user_id\": \"\",\n  \"signature\": \"\"\n}" },
+            "url": { "raw": "{{baseUrl}}/auth/hmac", "host": ["{{baseUrl}}"], "path": ["auth", "hmac"] },
+            "description": "Exchange an HMAC-SHA256 signature (application_user_id signed with the application secret) for a JWT access token."
+          }
+        },
+        {
+          "name": "Authenticate with client token",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{}" },
+            "url": { "raw": "{{baseUrl}}/auth/client_token", "host": ["{{baseUrl}}"], "path": ["auth", "client_token"] },
+            "description": "Mint an access token using an application-level client token grant."
+          }
+        },
+        {
+          "name": "Authenticate with PKCS1 signature",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{}" },
+            "url": { "raw": "{{baseUrl}}/auth/pkcs1", "host": ["{{baseUrl}}"], "path": ["auth", "pkcs1"] },
+            "description": "Exchange an RSA PKCS1 signature for a JWT access token."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Provider Integrations",
+      "item": [
+        {
+          "name": "Initialize a provider integration",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/providers/:provider_slug/integration/init", "host": ["{{baseUrl}}"], "path": ["providers", ":provider_slug", "integration", "init"], "variable": [{ "key": "provider_slug", "value": "garmin" }] },
+            "description": "Start the hosted integration flow for a provider (garmin, fitbit, oura, whoop, dexcom, withings, polar, strava, and more)."
+          }
+        },
+        {
+          "name": "Get provider integration init URL",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/providers/:provider_slug/integration/init_url", "host": ["{{baseUrl}}"], "path": ["providers", ":provider_slug", "integration", "init_url"], "variable": [{ "key": "provider_slug", "value": "fitbit" }] },
+            "description": "Returns the URL that begins the hosted integration flow, for embedding in your own UI."
+          }
+        },
+        {
+          "name": "Delete a provider integration",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/providers/:provider_slug/integration", "host": ["{{baseUrl}}"], "path": ["providers", ":provider_slug", "integration"], "variable": [{ "key": "provider_slug", "value": "oura" }] },
+            "description": "Disconnects a provider from the current user."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Provider Records",
+      "item": [
+        {
+          "name": "List provider records",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/queries/provider_records?start_time=&end_time=", "host": ["{{baseUrl}}"], "path": ["queries", "provider_records"], "query": [{ "key": "start_time", "value": "" }, { "key": "end_time", "value": "" }] },
+            "description": "Lists normalized provider records for the user, filtered by time range, provider, and metric."
+          }
+        },
+        {
+          "name": "Get a provider record",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/queries/provider_records/:record_id", "host": ["{{baseUrl}}"], "path": ["queries", "provider_records", ":record_id"], "variable": [{ "key": "record_id", "value": "" }] },
+            "description": "Retrieves a single normalized provider record by ID."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sleep",
+      "item": [
+        {
+          "name": "List sleeps",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/queries/sleeps?start_time=&end_time=", "host": ["{{baseUrl}}"], "path": ["queries", "sleeps"], "query": [{ "key": "start_time", "value": "" }, { "key": "end_time", "value": "" }] },
+            "description": "Lists normalized sleep sessions with stage breakdowns, duration, and efficiency."
+          }
+        },
+        {
+          "name": "Get a sleep session",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/queries/sleeps/:sleep_id", "host": ["{{baseUrl}}"], "path": ["queries", "sleeps", ":sleep_id"], "variable": [{ "key": "sleep_id", "value": "" }] },
+            "description": "Retrieves a single sleep session by ID with full stage data."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Workouts",
+      "item": [
+        {
+          "name": "List workouts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/queries/workouts?start_time=&end_time=", "host": ["{{baseUrl}}"], "path": ["queries", "workouts"], "query": [{ "key": "start_time", "value": "" }, { "key": "end_time", "value": "" }] },
+            "description": "Lists normalized workouts / physical activities with per-activity metrics."
+          }
+        },
+        {
+          "name": "Get a workout",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/queries/workouts/:workout_id", "host": ["{{baseUrl}}"], "path": ["queries", "workouts", ":workout_id"], "variable": [{ "key": "workout_id", "value": "" }] },
+            "description": "Retrieves a single workout by ID with full metric detail."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Time Series",
+      "item": [
+        {
+          "name": "Query time series",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/queries/timeseries?metric=heartrate&start_time=&end_time=", "host": ["{{baseUrl}}"], "path": ["queries", "timeseries"], "query": [{ "key": "metric", "value": "heartrate" }, { "key": "start_time", "value": "" }, { "key": "end_time", "value": "" }] },
+            "description": "Returns a time series for a metric (heartrate, heartrate_resting, hrv_rmssd, hrv_sdnn, glucose, weight, body_fat, spo2, breathing_rate, steps, distance, calories_burned)."
+          }
+        },
+        {
+          "name": "Get time series samples",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/queries/timeseries/samples?metric=glucose&start_time=&end_time=", "host": ["{{baseUrl}}"], "path": ["queries", "timeseries", "samples"], "query": [{ "key": "metric", "value": "glucose" }, { "key": "start_time", "value": "" }, { "key": "end_time", "value": "" }] },
+            "description": "Returns raw sample-level time series data for a metric."
+          }
+        },
+        {
+          "name": "Query time series split by provider",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/queries/timeseries/split?metric=steps&start_time=&end_time=", "host": ["{{baseUrl}}"], "path": ["queries", "timeseries", "split"], "query": [{ "key": "metric", "value": "steps" }, { "key": "start_time", "value": "" }, { "key": "end_time", "value": "" }] },
+            "description": "Returns time series data for a metric split out per contributing provider source."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Statistics",
+      "item": [
+        {
+          "name": "Daily statistics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/queries/statistics/daily?metric=steps&start_time=&end_time=", "host": ["{{baseUrl}}"], "path": ["queries", "statistics", "daily"], "query": [{ "key": "metric", "value": "steps" }, { "key": "start_time", "value": "" }, { "key": "end_time", "value": "" }] },
+            "description": "Returns daily aggregated statistics for a metric over a time range."
+          }
+        },
+        {
+          "name": "Interval statistics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/queries/statistics/interval?metric=heartrate&start_time=&end_time=", "host": ["{{baseUrl}}"], "path": ["queries", "statistics", "interval"], "query": [{ "key": "metric", "value": "heartrate" }, { "key": "start_time", "value": "" }, { "key": "end_time", "value": "" }] },
+            "description": "Returns statistics aggregated over a specified interval."
+          }
+        },
+        {
+          "name": "Interpolation statistics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/queries/statistics/interpolation?metric=glucose&start_time=&end_time=", "host": ["{{baseUrl}}"], "path": ["queries", "statistics", "interpolation"], "query": [{ "key": "metric", "value": "glucose" }, { "key": "start_time", "value": "" }, { "key": "end_time", "value": "" }] },
+            "description": "Returns interpolated statistics for a metric where gaps are filled between samples."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Nutrition AI",
+      "item": [
+        {
+          "name": "List nutrition records",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/nutrition_records?start_time=&end_time=", "host": ["{{baseUrl}}"], "path": ["nutrition_records"], "query": [{ "key": "start_time", "value": "" }, { "key": "end_time", "value": "" }] },
+            "description": "Lists nutrition records for the user over a time range."
+          }
+        },
+        {
+          "name": "Analyze a food image",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"image\": \"<base64>\"\n}" },
+            "url": { "raw": "{{baseUrl}}/nutrition_records/image", "host": ["{{baseUrl}}"], "path": ["nutrition_records", "image"] },
+            "description": "Analyzes a base64 food image and returns a structured nutrition record."
+          }
+        },
+        {
+          "name": "Analyze a nutrition-facts label",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"image\": \"<base64>\"\n}" },
+            "url": { "raw": "{{baseUrl}}/nutrition_records/ingredients/label", "host": ["{{baseUrl}}"], "path": ["nutrition_records", "ingredients", "label"] },
+            "description": "Analyzes a nutrition-facts label image and returns structured nutrition fields."
+          }
+        },
+        {
+          "name": "Analyze a free-text meal",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"text\": \"two eggs and toast\"\n}" },
+            "url": { "raw": "{{baseUrl}}/nutrition_records/text", "host": ["{{baseUrl}}"], "path": ["nutrition_records", "text"] },
+            "description": "Analyzes a free-text meal description and returns a structured nutrition record."
+          }
+        },
+        {
+          "name": "Upload a manual nutrition record",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{}" },
+            "url": { "raw": "{{baseUrl}}/nutrition_records/manual", "host": ["{{baseUrl}}"], "path": ["nutrition_records", "manual"] },
+            "description": "Creates a nutrition record from manually supplied fields."
+          }
+        },
+        {
+          "name": "Get a nutrition record",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/nutrition_records/:nutrition_record_id", "host": ["{{baseUrl}}"], "path": ["nutrition_records", ":nutrition_record_id"], "variable": [{ "key": "nutrition_record_id", "value": "" }] },
+            "description": "Retrieves a nutrition record by ID."
+          }
+        },
+        {
+          "name": "Modify a nutrition record",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{}" },
+            "url": { "raw": "{{baseUrl}}/nutrition_records/:nutrition_record_id", "host": ["{{baseUrl}}"], "path": ["nutrition_records", ":nutrition_record_id"], "variable": [{ "key": "nutrition_record_id", "value": "" }] },
+            "description": "Adjusts a nutrition record, for example changing portion size."
+          }
+        },
+        {
+          "name": "Delete a nutrition record",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/nutrition_records/:nutrition_record_id", "host": ["{{baseUrl}}"], "path": ["nutrition_records", ":nutrition_record_id"], "variable": [{ "key": "nutrition_record_id", "value": "" }] },
+            "description": "Removes a nutrition record."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Lab Reports",
+      "item": [
+        {
+          "name": "List lab reports",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/lab_reports?start_time=&end_time=", "host": ["{{baseUrl}}"], "path": ["lab_reports"], "query": [{ "key": "start_time", "value": "" }, { "key": "end_time", "value": "" }] },
+            "description": "Lists lab reports for the user over a time range."
+          }
+        },
+        {
+          "name": "Upload a lab report",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"document\": \"<base64>\"\n}" },
+            "url": { "raw": "{{baseUrl}}/lab_reports", "host": ["{{baseUrl}}"], "path": ["lab_reports"] },
+            "description": "Uploads a base64-encoded lab report document for AI extraction."
+          }
+        },
+        {
+          "name": "Get a lab report",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/lab_reports/:lab_report_id", "host": ["{{baseUrl}}"], "path": ["lab_reports", ":lab_report_id"], "variable": [{ "key": "lab_report_id", "value": "" }] },
+            "description": "Retrieves a lab report by ID with structured biomarker results."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Application information",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/applicationinfo", "host": ["{{baseUrl}}"], "path": ["applicationinfo"] },
+            "description": "Returns application-level configuration and available providers."
+          }
+        },
+        {
+          "name": "User information",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/userinfo", "host": ["{{baseUrl}}"], "path": ["userinfo"] },
+            "description": "Returns the current authenticated user, including connected provider integrations."
+          }
+        },
+        {
+          "name": "User properties",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/userproperties", "host": ["{{baseUrl}}"], "path": ["userproperties"] },
+            "description": "Returns properties associated with the current user."
+          }
+        }
+      ]
+    },
+    {
+      "name": "SDK Push",
+      "item": [
+        {
+          "name": "Push Apple Health data",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{}" },
+            "url": { "raw": "{{baseUrl}}/providers/apple/push", "host": ["{{baseUrl}}"], "path": ["providers", "apple", "push"] },
+            "description": "Ingests Apple Health samples pushed from the Spike iOS SDK."
+          }
+        },
+        {
+          "name": "Push Android Health Connect data",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{}" },
+            "url": { "raw": "{{baseUrl}}/providers/health_connect/push", "host": ["{{baseUrl}}"], "path": ["providers", "health_connect", "push"] },
+            "description": "Ingests Android Health Connect samples pushed from the Spike Android SDK."
+          }
+        }
+      ]
+    }
+  ]
+}

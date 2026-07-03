@@ -1,0 +1,88 @@
+specification: FinOps Framework
+specificationVersion: '1.0'
+schema: https://www.finops.org/framework/
+provider: Spike
+providerId: spike-api
+created: '2026-07-03'
+modified: '2026-07-03'
+reconciled: false
+tags:
+- Health Data
+- Wearables
+- Digital Health
+- FinOps
+- Cost Management
+- FOCUS
+description: >-
+  FinOps view of Spike spend. Spike is a subscription SaaS: cost is driven by
+  the product lines enabled (Wearables & IoT API and/or Nutrition Scanner AI)
+  and the scale of connected end users (monthly active users), starting from a
+  published Sandbox subscription of $450/month per product line and moving to a
+  custom Enterprise agreement at production scale. Because billing is
+  subscription-plus-scale rather than metered per API call, the dominant cost
+  lever is the number of active connected users and enabled product lines, not
+  raw request counts. Additional AI features (Nutrition AI analysis, Lab Report
+  extraction, MCP layer) may factor into the negotiated Enterprise package.
+notes: >-
+  Per-MAU and per-feature unit rates are not published and are not reconciled
+  here. Verify current subscription tiers and any usage-based components on
+  https://www.spikeapi.com/pricing during reconciliation.
+sources:
+- https://www.spikeapi.com/
+- https://www.spikeapi.com/pricing
+- https://docs.spikeapi.com/api-docs/overview
+- https://focus.finops.org/focus-specification/v1-3/
+alignedWith:
+  framework: FinOps Foundation Framework
+  frameworkUrl: https://www.finops.org/framework/
+  dataSpec: FOCUS
+  dataSpecVersion: '1.3'
+  dataSpecUrl: https://focus.finops.org/focus-specification/v1-3/
+publisherName: Spike Technologies
+serviceCategory: Health Data and Wearables API
+billingModel:
+  pricingCategory: Subscription
+  billingFrequency: Monthly
+  billingCurrency: USD
+  chargeCategories:
+  - Purchase
+  - Usage
+meters:
+- name: monthly_active_users
+  description: Connected end users active in the billing period; the primary scale driver of the subscription.
+  unit: users
+  aggregation: max
+  dimensions:
+  - application
+  - product_line
+- name: product_line_subscription
+  description: Base subscription per enabled product line (Wearables & IoT API, Nutrition Scanner AI).
+  unit: subscription
+  aggregation: sum
+  dimensions:
+  - application
+  - product_line
+- name: nutrition_ai_analyses
+  description: Nutrition AI image / label / text analyses, where metered under the negotiated plan.
+  unit: analyses
+  aggregation: sum
+  dimensions:
+  - application
+- name: lab_report_extractions
+  description: Lab report documents processed by AI extraction, where metered under the negotiated plan.
+  unit: documents
+  aggregation: sum
+  dimensions:
+  - application
+principles:
+- name: Visibility
+  description: Track connected monthly active users per application and product line; monitor Nutrition AI and Lab Report volumes if they factor into the plan.
+- name: Allocation
+  description: Map product lines and connected-user cohorts to the internal teams or features that depend on Spike data.
+- name: Optimization
+  description: Enable only the product lines and providers you use; prune inactive user integrations to control MAU-driven cost; prefer webhook-driven reads over redundant polling.
+- name: Accountability
+  description: Assign an owner for the Spike contract; review MAU growth and enabled features against the Enterprise agreement each billing cycle.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

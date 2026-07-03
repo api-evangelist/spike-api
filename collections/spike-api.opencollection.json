@@ -1,0 +1,428 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Spike Application User API",
+    "version": "3.0.2"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": { "name": "Auth", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Authenticate with HMAC signature", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://app-api.spikeapi.com/v3/auth/hmac",
+            "auth": { "type": "none" },
+            "body": { "type": "json", "data": "{\n  \"application_id\": \"\",\n  \"application_user_id\": \"\",\n  \"signature\": \"\"\n}" }
+          },
+          "docs": "Exchange an HMAC-SHA256 signature (application_user_id signed with the application secret) for a JWT access token."
+        },
+        {
+          "info": { "name": "Authenticate with client token", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://app-api.spikeapi.com/v3/auth/client_token",
+            "auth": { "type": "none" },
+            "body": { "type": "json", "data": "{}" }
+          },
+          "docs": "Mint an access token using an application-level client token grant."
+        },
+        {
+          "info": { "name": "Authenticate with PKCS1 signature", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://app-api.spikeapi.com/v3/auth/pkcs1",
+            "auth": { "type": "none" },
+            "body": { "type": "json", "data": "{}" }
+          },
+          "docs": "Exchange an RSA PKCS1 signature for a JWT access token."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Provider Integrations", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Initialize a provider integration", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://app-api.spikeapi.com/v3/providers/:provider_slug/integration/init",
+            "params": [
+              { "name": "provider_slug", "value": "garmin", "type": "path", "description": "Provider slug: garmin, fitbit, oura, whoop, dexcom, withings, polar, strava, and more." }
+            ]
+          },
+          "docs": "Start the hosted integration flow for a provider."
+        },
+        {
+          "info": { "name": "Get provider integration init URL", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://app-api.spikeapi.com/v3/providers/:provider_slug/integration/init_url",
+            "params": [
+              { "name": "provider_slug", "value": "fitbit", "type": "path", "description": "Provider slug." }
+            ]
+          },
+          "docs": "Returns the URL that begins the hosted integration flow, for embedding in your own UI."
+        },
+        {
+          "info": { "name": "Delete a provider integration", "type": "http" },
+          "http": {
+            "method": "DELETE",
+            "url": "https://app-api.spikeapi.com/v3/providers/:provider_slug/integration",
+            "params": [
+              { "name": "provider_slug", "value": "oura", "type": "path", "description": "Provider slug." }
+            ]
+          },
+          "docs": "Disconnects a provider from the current user."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Provider Records", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List provider records", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://app-api.spikeapi.com/v3/queries/provider_records",
+            "params": [
+              { "name": "start_time", "value": "", "type": "query", "description": "Start of window (ISO 8601)." },
+              { "name": "end_time", "value": "", "type": "query", "description": "End of window (ISO 8601)." }
+            ]
+          },
+          "docs": "Lists normalized provider records for the user, filtered by time range, provider, and metric."
+        },
+        {
+          "info": { "name": "Get a provider record", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://app-api.spikeapi.com/v3/queries/provider_records/:record_id",
+            "params": [
+              { "name": "record_id", "value": "", "type": "path", "description": "The provider record ID." }
+            ]
+          },
+          "docs": "Retrieves a single normalized provider record by ID."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Sleep", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List sleeps", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://app-api.spikeapi.com/v3/queries/sleeps",
+            "params": [
+              { "name": "start_time", "value": "", "type": "query", "description": "Start of window (ISO 8601)." },
+              { "name": "end_time", "value": "", "type": "query", "description": "End of window (ISO 8601)." }
+            ]
+          },
+          "docs": "Lists normalized sleep sessions with stage breakdowns, duration, and efficiency."
+        },
+        {
+          "info": { "name": "Get a sleep session", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://app-api.spikeapi.com/v3/queries/sleeps/:sleep_id",
+            "params": [
+              { "name": "sleep_id", "value": "", "type": "path", "description": "The sleep session ID." }
+            ]
+          },
+          "docs": "Retrieves a single sleep session by ID with full stage data."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Workouts", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List workouts", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://app-api.spikeapi.com/v3/queries/workouts",
+            "params": [
+              { "name": "start_time", "value": "", "type": "query", "description": "Start of window (ISO 8601)." },
+              { "name": "end_time", "value": "", "type": "query", "description": "End of window (ISO 8601)." }
+            ]
+          },
+          "docs": "Lists normalized workouts / physical activities with per-activity metrics."
+        },
+        {
+          "info": { "name": "Get a workout", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://app-api.spikeapi.com/v3/queries/workouts/:workout_id",
+            "params": [
+              { "name": "workout_id", "value": "", "type": "path", "description": "The workout ID." }
+            ]
+          },
+          "docs": "Retrieves a single workout by ID with full metric detail."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Time Series", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Query time series", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://app-api.spikeapi.com/v3/queries/timeseries",
+            "params": [
+              { "name": "metric", "value": "heartrate", "type": "query", "description": "Metric: heartrate, heartrate_resting, hrv_rmssd, hrv_sdnn, glucose, weight, body_fat, spo2, breathing_rate, steps, distance, calories_burned." },
+              { "name": "start_time", "value": "", "type": "query", "description": "Start of window (ISO 8601)." },
+              { "name": "end_time", "value": "", "type": "query", "description": "End of window (ISO 8601)." }
+            ]
+          },
+          "docs": "Returns a time series for a specified metric over a time range."
+        },
+        {
+          "info": { "name": "Get time series samples", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://app-api.spikeapi.com/v3/queries/timeseries/samples",
+            "params": [
+              { "name": "metric", "value": "glucose", "type": "query", "description": "Metric identifier." },
+              { "name": "start_time", "value": "", "type": "query", "description": "Start of window (ISO 8601)." },
+              { "name": "end_time", "value": "", "type": "query", "description": "End of window (ISO 8601)." }
+            ]
+          },
+          "docs": "Returns raw sample-level time series data for a metric."
+        },
+        {
+          "info": { "name": "Query time series split by provider", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://app-api.spikeapi.com/v3/queries/timeseries/split",
+            "params": [
+              { "name": "metric", "value": "steps", "type": "query", "description": "Metric identifier." },
+              { "name": "start_time", "value": "", "type": "query", "description": "Start of window (ISO 8601)." },
+              { "name": "end_time", "value": "", "type": "query", "description": "End of window (ISO 8601)." }
+            ]
+          },
+          "docs": "Returns time series data for a metric split out per contributing provider source."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Statistics", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Daily statistics", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://app-api.spikeapi.com/v3/queries/statistics/daily",
+            "params": [
+              { "name": "metric", "value": "steps", "type": "query", "description": "Metric identifier." },
+              { "name": "start_time", "value": "", "type": "query", "description": "Start of window (ISO 8601)." },
+              { "name": "end_time", "value": "", "type": "query", "description": "End of window (ISO 8601)." }
+            ]
+          },
+          "docs": "Returns daily aggregated statistics for a metric over a time range."
+        },
+        {
+          "info": { "name": "Interval statistics", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://app-api.spikeapi.com/v3/queries/statistics/interval",
+            "params": [
+              { "name": "metric", "value": "heartrate", "type": "query", "description": "Metric identifier." },
+              { "name": "start_time", "value": "", "type": "query", "description": "Start of window (ISO 8601)." },
+              { "name": "end_time", "value": "", "type": "query", "description": "End of window (ISO 8601)." }
+            ]
+          },
+          "docs": "Returns statistics aggregated over a specified interval."
+        },
+        {
+          "info": { "name": "Interpolation statistics", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://app-api.spikeapi.com/v3/queries/statistics/interpolation",
+            "params": [
+              { "name": "metric", "value": "glucose", "type": "query", "description": "Metric identifier." },
+              { "name": "start_time", "value": "", "type": "query", "description": "Start of window (ISO 8601)." },
+              { "name": "end_time", "value": "", "type": "query", "description": "End of window (ISO 8601)." }
+            ]
+          },
+          "docs": "Returns interpolated statistics for a metric where gaps are filled between samples."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Nutrition AI", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List nutrition records", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://app-api.spikeapi.com/v3/nutrition_records",
+            "params": [
+              { "name": "start_time", "value": "", "type": "query", "description": "Start of window (ISO 8601)." },
+              { "name": "end_time", "value": "", "type": "query", "description": "End of window (ISO 8601)." }
+            ]
+          },
+          "docs": "Lists nutrition records for the user over a time range."
+        },
+        {
+          "info": { "name": "Analyze a food image", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://app-api.spikeapi.com/v3/nutrition_records/image",
+            "body": { "type": "json", "data": "{\n  \"image\": \"<base64>\"\n}" }
+          },
+          "docs": "Analyzes a base64 food image and returns a structured nutrition record."
+        },
+        {
+          "info": { "name": "Analyze a nutrition-facts label", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://app-api.spikeapi.com/v3/nutrition_records/ingredients/label",
+            "body": { "type": "json", "data": "{\n  \"image\": \"<base64>\"\n}" }
+          },
+          "docs": "Analyzes a nutrition-facts label image and returns structured nutrition fields."
+        },
+        {
+          "info": { "name": "Analyze a free-text meal", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://app-api.spikeapi.com/v3/nutrition_records/text",
+            "body": { "type": "json", "data": "{\n  \"text\": \"two eggs and toast\"\n}" }
+          },
+          "docs": "Analyzes a free-text meal description and returns a structured nutrition record."
+        },
+        {
+          "info": { "name": "Upload a manual nutrition record", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://app-api.spikeapi.com/v3/nutrition_records/manual",
+            "body": { "type": "json", "data": "{}" }
+          },
+          "docs": "Creates a nutrition record from manually supplied fields."
+        },
+        {
+          "info": { "name": "Get a nutrition record", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://app-api.spikeapi.com/v3/nutrition_records/:nutrition_record_id",
+            "params": [
+              { "name": "nutrition_record_id", "value": "", "type": "path", "description": "The nutrition record ID." }
+            ]
+          },
+          "docs": "Retrieves a nutrition record by ID."
+        },
+        {
+          "info": { "name": "Modify a nutrition record", "type": "http" },
+          "http": {
+            "method": "PATCH",
+            "url": "https://app-api.spikeapi.com/v3/nutrition_records/:nutrition_record_id",
+            "params": [
+              { "name": "nutrition_record_id", "value": "", "type": "path", "description": "The nutrition record ID." }
+            ],
+            "body": { "type": "json", "data": "{}" }
+          },
+          "docs": "Adjusts a nutrition record, for example changing portion size."
+        },
+        {
+          "info": { "name": "Delete a nutrition record", "type": "http" },
+          "http": {
+            "method": "DELETE",
+            "url": "https://app-api.spikeapi.com/v3/nutrition_records/:nutrition_record_id",
+            "params": [
+              { "name": "nutrition_record_id", "value": "", "type": "path", "description": "The nutrition record ID." }
+            ]
+          },
+          "docs": "Removes a nutrition record."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Lab Reports", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List lab reports", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://app-api.spikeapi.com/v3/lab_reports",
+            "params": [
+              { "name": "start_time", "value": "", "type": "query", "description": "Start of window (ISO 8601)." },
+              { "name": "end_time", "value": "", "type": "query", "description": "End of window (ISO 8601)." }
+            ]
+          },
+          "docs": "Lists lab reports for the user over a time range."
+        },
+        {
+          "info": { "name": "Upload a lab report", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://app-api.spikeapi.com/v3/lab_reports",
+            "body": { "type": "json", "data": "{\n  \"document\": \"<base64>\"\n}" }
+          },
+          "docs": "Uploads a base64-encoded lab report document for AI extraction."
+        },
+        {
+          "info": { "name": "Get a lab report", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://app-api.spikeapi.com/v3/lab_reports/:lab_report_id",
+            "params": [
+              { "name": "lab_report_id", "value": "", "type": "path", "description": "The lab report ID." }
+            ]
+          },
+          "docs": "Retrieves a lab report by ID with structured biomarker results."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Users", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Application information", "type": "http" },
+          "http": { "method": "GET", "url": "https://app-api.spikeapi.com/v3/applicationinfo" },
+          "docs": "Returns application-level configuration and available providers."
+        },
+        {
+          "info": { "name": "User information", "type": "http" },
+          "http": { "method": "GET", "url": "https://app-api.spikeapi.com/v3/userinfo" },
+          "docs": "Returns the current authenticated user, including connected provider integrations."
+        },
+        {
+          "info": { "name": "User properties", "type": "http" },
+          "http": { "method": "GET", "url": "https://app-api.spikeapi.com/v3/userproperties" },
+          "docs": "Returns properties associated with the current user."
+        }
+      ]
+    },
+    {
+      "info": { "name": "SDK Push", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Push Apple Health data", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://app-api.spikeapi.com/v3/providers/apple/push",
+            "body": { "type": "json", "data": "{}" }
+          },
+          "docs": "Ingests Apple Health samples pushed from the Spike iOS SDK."
+        },
+        {
+          "info": { "name": "Push Android Health Connect data", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://app-api.spikeapi.com/v3/providers/health_connect/push",
+            "body": { "type": "json", "data": "{}" }
+          },
+          "docs": "Ingests Android Health Connect samples pushed from the Spike Android SDK."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

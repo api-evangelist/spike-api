@@ -1,0 +1,324 @@
+aid: spike-api
+url: https://raw.githubusercontent.com/api-evangelist/spike-api/refs/heads/main/apis.yml
+name: Spike
+kind: company
+description: Spike (Spike Technologies) provides a unified health and wearables data
+  API that connects an application to 500+ wearables, IoT devices, CGMs, EMRs, labs,
+  and nutrition sources through a single integration - aggregating Apple Health,
+  Garmin, Fitbit, Oura, Whoop, Dexcom, Withings, Polar, Suunto, Strava, and more.
+  Developers authenticate end users with HMAC signatures, connect providers via
+  hosted OAuth-style integration flows, then query normalized health data - sleep,
+  workouts, time series metrics (heart rate, HRV, glucose, weight, SpO2, steps),
+  daily and interval statistics, nutrition, and lab reports - over a REST API at
+  https://app-api.spikeapi.com/v3, with outbound webhooks pushing record-change
+  events. Spike also ships mobile SDKs (iOS, Android, Flutter, React Native), a
+  Nutrition AI scanner, and an MCP layer for AI-ready health data.
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+tags:
+- Health Data
+- Wearables
+- Fitness
+- Digital Health
+- Data Aggregation
+- HIPAA
+created: '2026-07-03'
+modified: '2026-07-03'
+specificationVersion: '0.19'
+apis:
+- aid: spike-api:spike-api-authentication-api
+  name: Spike Authentication API
+  tags:
+  - Authentication
+  - HMAC
+  - Tokens
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://docs.spikeapi.com/api-docs/authentication
+  baseURL: https://app-api.spikeapi.com/v3
+  properties:
+  - url: https://docs.spikeapi.com/api-docs/authentication
+    type: Documentation
+  - url: https://docs.spikeapi.com/api-reference/openapi.json
+    type: APIReference
+  - url: openapi/spike-api-openapi.yml
+    type: OpenAPI
+  - url: collections/spike-api.postman_collection.json
+    type: PostmanCollection
+  - url: collections/spike-api.opencollection.json
+    type: OpenCollection
+  description: Authenticate an application's end users and mint a JWT access token.
+    The application signs the application user ID with its secret using HMAC-SHA256
+    and exchanges the signature at /auth/hmac (also /auth/client_token and
+    /auth/pkcs1); the returned Bearer token authorizes all subsequent requests.
+- aid: spike-api:spike-api-provider-integrations-api
+  name: Spike Provider Integrations API
+  tags:
+  - Connections
+  - Providers
+  - OAuth
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://docs.spikeapi.com/api-docs/provider_integration
+  baseURL: https://app-api.spikeapi.com/v3
+  properties:
+  - url: https://docs.spikeapi.com/api-docs/provider_integration
+    type: Documentation
+  - url: https://docs.spikeapi.com/technical-references/provider_matrix
+    type: APIReference
+  - url: openapi/spike-api-openapi.yml
+    type: OpenAPI
+  - url: collections/spike-api.postman_collection.json
+    type: PostmanCollection
+  - url: collections/spike-api.opencollection.json
+    type: OpenCollection
+  description: Connect and disconnect a user's data providers. Initialize a hosted
+    integration flow (/providers/{provider_slug}/integration/init and /init_url),
+    receive the provider OAuth callback, and delete an existing integration.
+    Providers include Garmin, Fitbit, Oura, Whoop, Dexcom, FreeStyle Libre,
+    Withings, Polar, Suunto, Strava, Coros, Wahoo, Ultrahuman, Omron, Huawei,
+    Google Fit, Google Health Connect, and more.
+- aid: spike-api:spike-api-provider-records-api
+  name: Spike Provider Records API
+  tags:
+  - Provider Records
+  - Health Data
+  - Queries
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://docs.spikeapi.com/api-reference/query-provider-records-list
+  baseURL: https://app-api.spikeapi.com/v3
+  properties:
+  - url: https://docs.spikeapi.com/api-reference/query-provider-records-list
+    type: APIReference
+  - url: openapi/spike-api-openapi.yml
+    type: OpenAPI
+  - url: collections/spike-api.postman_collection.json
+    type: PostmanCollection
+  - url: collections/spike-api.opencollection.json
+    type: OpenCollection
+  description: List and retrieve normalized provider records - the discrete health
+    data samples ingested from a user's connected providers - via
+    /queries/provider_records, /queries/provider_records/{record_id}, and the
+    compatibility POST /queries/provider_record, filtered by time range, provider,
+    and metric.
+- aid: spike-api:spike-api-sleep-api
+  name: Spike Sleep API
+  tags:
+  - Sleep
+  - Stages
+  - Recovery
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://docs.spikeapi.com/api-reference/query-sleep-list
+  baseURL: https://app-api.spikeapi.com/v3
+  properties:
+  - url: https://docs.spikeapi.com/api-reference/query-sleep-list
+    type: APIReference
+  - url: openapi/spike-api-openapi.yml
+    type: OpenAPI
+  - url: collections/spike-api.postman_collection.json
+    type: PostmanCollection
+  - url: collections/spike-api.opencollection.json
+    type: OpenCollection
+  description: Query normalized sleep sessions with stage breakdowns (awake, light,
+    deep, REM), duration, and efficiency via /queries/sleeps and
+    /queries/sleeps/{sleep_id}, unified across every connected provider.
+- aid: spike-api:spike-api-workouts-api
+  name: Spike Workouts API
+  tags:
+  - Workouts
+  - Activity
+  - Exercise
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://docs.spikeapi.com/api-reference/query-workouts-list
+  baseURL: https://app-api.spikeapi.com/v3
+  properties:
+  - url: https://docs.spikeapi.com/api-reference/query-workouts-list
+    type: APIReference
+  - url: https://docs.spikeapi.com/technical-references/activity_matrix
+    type: Documentation
+  - url: openapi/spike-api-openapi.yml
+    type: OpenAPI
+  - url: collections/spike-api.postman_collection.json
+    type: PostmanCollection
+  - url: collections/spike-api.opencollection.json
+    type: OpenCollection
+  description: List and retrieve workouts / physical activities with per-activity
+    metrics (duration, distance, calories, heart rate zones) via /queries/workouts
+    and /queries/workouts/{workout_id}, normalized across the full activity-type
+    matrix.
+- aid: spike-api:spike-api-time-series-api
+  name: Spike Time Series API
+  tags:
+  - Time Series
+  - Heart Rate
+  - Glucose
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://docs.spikeapi.com/api-reference/query-timeseries
+  baseURL: https://app-api.spikeapi.com/v3
+  properties:
+  - url: https://docs.spikeapi.com/api-reference/query-timeseries
+    type: APIReference
+  - url: https://docs.spikeapi.com/technical-references/metrics_matrix
+    type: Documentation
+  - url: openapi/spike-api-openapi.yml
+    type: OpenAPI
+  - url: collections/spike-api.postman_collection.json
+    type: PostmanCollection
+  - url: collections/spike-api.opencollection.json
+    type: OpenCollection
+  description: Retrieve high-resolution time series for a specified metric via
+    /queries/timeseries, /queries/timeseries/samples, and
+    /queries/timeseries/split (split by provider source). Metrics include heart
+    rate, resting heart rate, HRV (RMSSD and SDNN), glucose, weight, body fat,
+    SpO2, breathing rate, steps, distance, and calories burned - the surface
+    through which heart-rate, body/weight, and CGM/glucose data are delivered.
+- aid: spike-api:spike-api-statistics-api
+  name: Spike Statistics API
+  tags:
+  - Statistics
+  - Aggregation
+  - Metrics
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://docs.spikeapi.com/api-reference/query-statistics-daily
+  baseURL: https://app-api.spikeapi.com/v3
+  properties:
+  - url: https://docs.spikeapi.com/api-reference/query-statistics-daily
+    type: APIReference
+  - url: https://docs.spikeapi.com/technical-references/statistics_matrix
+    type: Documentation
+  - url: openapi/spike-api-openapi.yml
+    type: OpenAPI
+  - url: collections/spike-api.postman_collection.json
+    type: PostmanCollection
+  - url: collections/spike-api.opencollection.json
+    type: OpenCollection
+  description: Compute aggregated statistics for metrics over time - daily rollups
+    (/queries/statistics/daily), arbitrary intervals (/queries/statistics/interval),
+    and interpolation (/queries/statistics/interpolation) - for building dashboards,
+    trends, and Health Insight scores from unified biometric data.
+- aid: spike-api:spike-api-nutrition-ai-api
+  name: Spike Nutrition AI API
+  tags:
+  - Nutrition
+  - AI
+  - Food Logging
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://docs.spikeapi.com/nutrition-ai/overview
+  baseURL: https://app-api.spikeapi.com/v3
+  properties:
+  - url: https://docs.spikeapi.com/nutrition-ai/overview
+    type: Documentation
+  - url: https://docs.spikeapi.com/technical-references/nutritional_fields
+    type: APIReference
+  - url: openapi/spike-api-openapi.yml
+    type: OpenAPI
+  - url: collections/spike-api.postman_collection.json
+    type: PostmanCollection
+  - url: collections/spike-api.opencollection.json
+    type: OpenCollection
+  description: Create, analyze, and manage nutrition records. Analyze a food image
+    (/nutrition_records/image), a nutrition-facts label
+    (/nutrition_records/ingredients/label), or a free-text meal
+    (/nutrition_records/text), log a manual record (/nutrition_records/manual),
+    then list, get, modify, replace, or delete records across 29 nutritional
+    fields.
+- aid: spike-api:spike-api-lab-reports-api
+  name: Spike Lab Reports API
+  tags:
+  - Lab Reports
+  - Biomarkers
+  - EMR
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://docs.spikeapi.com/lab-reports/overview
+  baseURL: https://app-api.spikeapi.com/v3
+  properties:
+  - url: https://docs.spikeapi.com/lab-reports/overview
+    type: Documentation
+  - url: https://docs.spikeapi.com/api-reference/upload-lab-report
+    type: APIReference
+  - url: openapi/spike-api-openapi.yml
+    type: OpenAPI
+  - url: collections/spike-api.postman_collection.json
+    type: PostmanCollection
+  - url: collections/spike-api.opencollection.json
+    type: OpenCollection
+  description: Upload lab report documents (base64) for AI extraction, then process,
+    list, and retrieve structured biomarker results via /lab_reports,
+    /lab_reports/process, and /lab_reports/{lab_report_id}.
+- aid: spike-api:spike-api-users-api
+  name: Spike Users API
+  tags:
+  - Users
+  - Profile
+  - Application Info
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://docs.spikeapi.com/api-reference/user-info
+  baseURL: https://app-api.spikeapi.com/v3
+  properties:
+  - url: https://docs.spikeapi.com/api-reference/user-info
+    type: APIReference
+  - url: openapi/spike-api-openapi.yml
+    type: OpenAPI
+  - url: collections/spike-api.postman_collection.json
+    type: PostmanCollection
+  - url: collections/spike-api.opencollection.json
+    type: OpenCollection
+  description: Retrieve the current authenticated user's information and connected
+    providers (/userinfo), user properties (/userproperties), and application-level
+    configuration and available providers (/applicationinfo).
+- aid: spike-api:spike-api-sdk-push-api
+  name: Spike SDK Push API
+  tags:
+  - SDK
+  - Push
+  - Mobile
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://docs.spikeapi.com/api-docs/overview
+  baseURL: https://app-api.spikeapi.com/v3
+  properties:
+  - url: https://docs.spikeapi.com/api-docs/overview
+    type: Documentation
+  - url: openapi/spike-api-openapi.yml
+    type: OpenAPI
+  - url: collections/spike-api.postman_collection.json
+    type: PostmanCollection
+  - url: collections/spike-api.opencollection.json
+    type: OpenCollection
+  description: Ingest on-device health data pushed from the Spike mobile SDKs. The
+    SDK posts Apple Health, Android Health Connect, and Samsung Health samples
+    (JSON and protobuf) via /providers/apple/push,
+    /providers/health_connect/push, and /providers/samsung_health_data/push/proto
+    for normalization into the same query surface.
+- aid: spike-api:spike-api-webhooks-api
+  name: Spike Webhooks API
+  tags:
+  - Webhooks
+  - Events
+  - Notifications
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://docs.spikeapi.com/api-docs/webhooks
+  baseURL: https://app-api.spikeapi.com/v3
+  properties:
+  - url: https://docs.spikeapi.com/api-docs/webhooks
+    type: Documentation
+  description: Outbound webhook event delivery. After data updates, Spike POSTs a
+    JSON array of events - record_change, provider_integration_created, and
+    provider_integration_deleted - to a webhook URL configured in the admin
+    console, HMAC-SHA256 signed via the X-Body-Signature header, with retries
+    (up to 10) on non-200 responses. Delivery is outbound HTTP only; there is no
+    public WebSocket or SSE surface.
+common:
+- type: GitHubOrganization
+  url: https://github.com/Spike-API
+- type: LinkedIn
+  url: https://www.linkedin.com/company/spike-api
+- type: Website
+  url: https://www.spikeapi.com
+- type: Documentation
+  url: https://docs.spikeapi.com
+- type: Plans
+  url: plans/spike-api-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/spike-api-rate-limits.yml
+- type: FinOps
+  url: finops/spike-api-finops.yml
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

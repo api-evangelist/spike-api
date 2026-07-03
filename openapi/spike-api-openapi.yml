@@ -1,0 +1,986 @@
+openapi: 3.1.0
+info:
+  title: Spike Application User API
+  description: >-
+    Spike (Spike Technologies) unified health and wearables data API. A single
+    integration layer that connects an application to 500+ wearables, IoT
+    devices, CGMs, EMRs, labs, and nutrition sources - Apple Health, Garmin,
+    Fitbit, Oura, Whoop, Dexcom, FreeStyle Libre, Withings, Polar, Suunto,
+    Strava, and more. Applications authenticate their end users with HMAC
+    signatures to mint a JWT access token, connect providers through hosted
+    integration flows, then query normalized health data (sleep, workouts, time
+    series, statistics), analyze nutrition and lab reports, and receive
+    record-change webhooks.
+
+
+    This document is grounded in Spike's published OpenAPI (v3.0.2) and public
+    documentation at https://docs.spikeapi.com. Path, method, base URL, auth, and
+    provider surfaces are confirmed from the official OpenAPI. Request and
+    response schemas are modeled generically here where full component schemas
+    were not enumerated - see endpointsModeled notes in review.yml.
+  version: 3.0.2
+  contact:
+    name: Spike Technologies
+    url: https://www.spikeapi.com
+servers:
+  - url: https://app-api.spikeapi.com/v3
+    description: Spike Application User API
+security:
+  - bearer: []
+tags:
+  - name: Auth
+    description: Authenticate end users and mint JWT access tokens.
+  - name: Provider Integrations
+    description: Connect and disconnect a user's health data providers.
+  - name: Provider Records
+    description: Query normalized provider health data records.
+  - name: Sleep
+    description: Query normalized sleep sessions and stages.
+  - name: Workouts
+    description: Query normalized workouts and physical activities.
+  - name: Time Series
+    description: Query high-resolution metric time series.
+  - name: Statistics
+    description: Query aggregated statistics for metrics over time.
+  - name: Nutrition AI
+    description: Analyze and manage nutrition records.
+  - name: Lab Reports
+    description: Upload and query structured lab report biomarkers.
+  - name: Users
+    description: Current user, user properties, and application info.
+  - name: SDK Push
+    description: Ingest on-device health data pushed from the mobile SDKs.
+paths:
+  /auth/hmac:
+    post:
+      operationId: authHmac
+      tags:
+        - Auth
+      summary: Authenticate with an HMAC signature
+      description: >-
+        Exchange an HMAC-SHA256 signature (the application user ID signed with
+        the application secret) for a JWT access token. No pre-registration is
+        required; users are provisioned on first authentication.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HmacAuthRequest'
+      responses:
+        '200':
+          description: A JWT access token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthToken'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /auth/client_token:
+    post:
+      operationId: authClientToken
+      tags:
+        - Auth
+      summary: Authenticate with a client token
+      description: Mint an access token using an application-level client token grant.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: A JWT access token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthToken'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /auth/pkcs1:
+    post:
+      operationId: authPkcs1
+      tags:
+        - Auth
+      summary: Authenticate with a PKCS1 signature
+      description: Exchange an RSA PKCS1 signature for a JWT access token.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: A JWT access token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthToken'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /applicationinfo:
+    get:
+      operationId: getApplicationInfo
+      tags:
+        - Users
+      summary: Application Information
+      description: Returns application-level configuration and the list of available providers.
+      responses:
+        '200':
+          description: Application information.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /userinfo:
+    get:
+      operationId: getUserInfo
+      tags:
+        - Users
+      summary: User Information
+      description: Returns the current authenticated user, including connected provider integrations.
+      responses:
+        '200':
+          description: User information.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /userproperties:
+    get:
+      operationId: getUserProperties
+      tags:
+        - Users
+      summary: User Properties
+      description: Returns properties associated with the current user.
+      responses:
+        '200':
+          description: User properties.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /providers/{provider_slug}/integration/init:
+    parameters:
+      - $ref: '#/components/parameters/ProviderSlug'
+    get:
+      operationId: initProviderIntegration
+      tags:
+        - Provider Integrations
+      summary: Initialize a provider integration
+      description: >-
+        Start the hosted integration flow for a provider (for example garmin,
+        fitbit, oura, whoop, dexcom, withings). Redirects the user into the
+        provider's OAuth-style consent screen.
+      responses:
+        '302':
+          description: Redirect to the provider authorization screen.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /providers/{provider_slug}/integration/init_url:
+    parameters:
+      - $ref: '#/components/parameters/ProviderSlug'
+    get:
+      operationId: getProviderIntegrationInitUrl
+      tags:
+        - Provider Integrations
+      summary: Get a provider integration init URL
+      description: Returns the URL that begins the hosted integration flow for a provider, for embedding in your own UI.
+      responses:
+        '200':
+          description: The integration initialization URL.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /providers/{provider_slug}/integration:
+    parameters:
+      - $ref: '#/components/parameters/ProviderSlug'
+    delete:
+      operationId: deleteProviderIntegration
+      tags:
+        - Provider Integrations
+      summary: Delete a provider integration
+      description: Disconnects a provider from the current user and removes the stored authorization.
+      responses:
+        '200':
+          description: The integration was deleted.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /providers/{provider_slug}/integration/callback:
+    parameters:
+      - $ref: '#/components/parameters/ProviderSlug'
+    get:
+      operationId: providerIntegrationCallback
+      tags:
+        - Provider Integrations
+      summary: Provider OAuth callback
+      description: >-
+        OAuth redirect callback endpoint hit by the provider after the user
+        authorizes access. Each provider also has an explicit callback path
+        (for example /providers/garmin/integration/callback,
+        /providers/fitbit/integration/callback,
+        /providers/dexcom/integration/callback).
+      security: []
+      responses:
+        '302':
+          description: Redirect back into the application after linking.
+  /queries/provider_records:
+    get:
+      operationId: listProviderRecords
+      tags:
+        - Provider Records
+      summary: List Provider Records
+      description: Lists normalized provider records for the user, filtered by time range, provider, and metric.
+      parameters:
+        - $ref: '#/components/parameters/StartTime'
+        - $ref: '#/components/parameters/EndTime'
+        - $ref: '#/components/parameters/ProviderQuery'
+        - $ref: '#/components/parameters/Metric'
+      responses:
+        '200':
+          description: A list of provider records.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /queries/provider_records/{record_id}:
+    parameters:
+      - $ref: '#/components/parameters/RecordId'
+    get:
+      operationId: getProviderRecord
+      tags:
+        - Provider Records
+      summary: Get Provider Record
+      description: Retrieves a single normalized provider record by ID, including its metrics.
+      responses:
+        '200':
+          description: A provider record.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /queries/provider_record:
+    post:
+      operationId: queryProviderRecordCompat
+      tags:
+        - Provider Records
+      summary: 'COMPAT: Query provider records'
+      description: Compatibility endpoint that queries provider records via a POST body.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Matching provider records.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /queries/sleeps:
+    get:
+      operationId: listSleeps
+      tags:
+        - Sleep
+      summary: List Sleeps
+      description: Lists normalized sleep sessions with stage breakdowns, duration, and efficiency.
+      parameters:
+        - $ref: '#/components/parameters/StartTime'
+        - $ref: '#/components/parameters/EndTime'
+      responses:
+        '200':
+          description: A list of sleep sessions.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /queries/sleeps/{sleep_id}:
+    parameters:
+      - name: sleep_id
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      operationId: getSleep
+      tags:
+        - Sleep
+      summary: Get Sleep
+      description: Retrieves a single sleep session by ID with full stage data.
+      responses:
+        '200':
+          description: A sleep session.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /queries/workouts:
+    get:
+      operationId: listWorkouts
+      tags:
+        - Workouts
+      summary: List Workouts
+      description: Lists normalized workouts / physical activities with per-activity metrics.
+      parameters:
+        - $ref: '#/components/parameters/StartTime'
+        - $ref: '#/components/parameters/EndTime'
+      responses:
+        '200':
+          description: A list of workouts.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /queries/workouts/{workout_id}:
+    parameters:
+      - name: workout_id
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      operationId: getWorkout
+      tags:
+        - Workouts
+      summary: Get Workout
+      description: Retrieves a single workout by ID with full metric detail.
+      responses:
+        '200':
+          description: A workout.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /queries/timeseries:
+    get:
+      operationId: queryTimeSeries
+      tags:
+        - Time Series
+      summary: Time Series
+      description: >-
+        Returns a time series for a specified metric (for example heartrate,
+        heartrate_resting, hrv_rmssd, hrv_sdnn, glucose, weight, body_fat, spo2,
+        breathing_rate, steps, distance, calories_burned) over a time range.
+      parameters:
+        - $ref: '#/components/parameters/Metric'
+        - $ref: '#/components/parameters/StartTime'
+        - $ref: '#/components/parameters/EndTime'
+      responses:
+        '200':
+          description: A metric time series.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /queries/timeseries/samples:
+    get:
+      operationId: queryTimeSeriesSamples
+      tags:
+        - Time Series
+      summary: Get Samples Time Series
+      description: Returns raw sample-level time series data for a metric.
+      parameters:
+        - $ref: '#/components/parameters/Metric'
+        - $ref: '#/components/parameters/StartTime'
+        - $ref: '#/components/parameters/EndTime'
+      responses:
+        '200':
+          description: Sample-level time series.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /queries/timeseries/split:
+    get:
+      operationId: queryTimeSeriesSplit
+      tags:
+        - Time Series
+      summary: Time Series Data split by provider source
+      description: Returns time series data for a metric split out per contributing provider source.
+      parameters:
+        - $ref: '#/components/parameters/Metric'
+        - $ref: '#/components/parameters/StartTime'
+        - $ref: '#/components/parameters/EndTime'
+      responses:
+        '200':
+          description: Time series split by provider.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /queries/statistics/daily:
+    get:
+      operationId: queryStatisticsDaily
+      tags:
+        - Statistics
+      summary: Daily Statistics
+      description: Returns daily aggregated statistics for a metric over a time range.
+      parameters:
+        - $ref: '#/components/parameters/Metric'
+        - $ref: '#/components/parameters/StartTime'
+        - $ref: '#/components/parameters/EndTime'
+      responses:
+        '200':
+          description: Daily statistics.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /queries/statistics/interval:
+    get:
+      operationId: queryStatisticsInterval
+      tags:
+        - Statistics
+      summary: Interval Statistics
+      description: Returns statistics aggregated over a specified interval.
+      parameters:
+        - $ref: '#/components/parameters/Metric'
+        - $ref: '#/components/parameters/StartTime'
+        - $ref: '#/components/parameters/EndTime'
+      responses:
+        '200':
+          description: Interval statistics.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /queries/statistics/interpolation:
+    get:
+      operationId: queryStatisticsInterpolation
+      tags:
+        - Statistics
+      summary: Statistics by interpolation
+      description: Returns interpolated statistics for a metric where gaps are filled between samples.
+      parameters:
+        - $ref: '#/components/parameters/Metric'
+        - $ref: '#/components/parameters/StartTime'
+        - $ref: '#/components/parameters/EndTime'
+      responses:
+        '200':
+          description: Interpolated statistics.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /nutrition_records:
+    get:
+      operationId: listNutritionRecords
+      tags:
+        - Nutrition AI
+      summary: List nutrition records
+      description: Lists nutrition records for the user over a time range.
+      parameters:
+        - $ref: '#/components/parameters/StartTime'
+        - $ref: '#/components/parameters/EndTime'
+      responses:
+        '200':
+          description: A list of nutrition records.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /nutrition_records/image:
+    post:
+      operationId: analyzeNutritionImage
+      tags:
+        - Nutrition AI
+      summary: Analyze a food image
+      description: Analyzes a base64 food image and returns a structured nutrition record.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: The analyzed nutrition record.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /nutrition_records/ingredients/label:
+    post:
+      operationId: analyzeNutritionLabel
+      tags:
+        - Nutrition AI
+      summary: Analyze a nutrition-facts label
+      description: Analyzes a nutrition-facts label image and returns structured nutrition fields.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: The analyzed nutrition record.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /nutrition_records/text:
+    post:
+      operationId: analyzeNutritionText
+      tags:
+        - Nutrition AI
+      summary: Analyze a free-text meal
+      description: Analyzes a free-text meal description and returns a structured nutrition record.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: The analyzed nutrition record.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /nutrition_records/manual:
+    post:
+      operationId: createManualNutritionRecord
+      tags:
+        - Nutrition AI
+      summary: Upload a manual nutrition record
+      description: Creates a nutrition record from manually supplied fields.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: The created nutrition record.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /nutrition_records/{nutrition_record_id}:
+    parameters:
+      - name: nutrition_record_id
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      operationId: getNutritionRecord
+      tags:
+        - Nutrition AI
+      summary: Get a nutrition record
+      description: Retrieves a nutrition record by ID.
+      responses:
+        '200':
+          description: The nutrition record.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      operationId: modifyNutritionRecord
+      tags:
+        - Nutrition AI
+      summary: Modify a nutrition record
+      description: Adjusts a nutrition record, for example changing portion size.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: The updated nutrition record.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      operationId: replaceNutritionRecord
+      tags:
+        - Nutrition AI
+      summary: Replace a nutrition record
+      description: Replaces an existing nutrition record.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: The replaced nutrition record.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      operationId: deleteNutritionRecord
+      tags:
+        - Nutrition AI
+      summary: Delete a nutrition record
+      description: Removes a nutrition record.
+      responses:
+        '200':
+          description: The record was deleted.
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /lab_reports:
+    get:
+      operationId: listLabReports
+      tags:
+        - Lab Reports
+      summary: List lab reports
+      description: Lists lab reports for the user over a time range.
+      parameters:
+        - $ref: '#/components/parameters/StartTime'
+        - $ref: '#/components/parameters/EndTime'
+      responses:
+        '200':
+          description: A list of lab reports.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      operationId: uploadLabReport
+      tags:
+        - Lab Reports
+      summary: Upload a lab report
+      description: Uploads a base64-encoded lab report document for AI extraction.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: The uploaded lab report.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /lab_reports/process:
+    post:
+      operationId: processLabReport
+      tags:
+        - Lab Reports
+      summary: Process a lab report
+      description: Triggers or re-triggers AI processing of an uploaded lab report document.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: The processing result.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /lab_reports/{lab_report_id}:
+    parameters:
+      - name: lab_report_id
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      operationId: getLabReport
+      tags:
+        - Lab Reports
+      summary: Get a lab report
+      description: Retrieves a lab report by ID with structured biomarker results.
+      responses:
+        '200':
+          description: The lab report.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /providers/apple/push:
+    post:
+      operationId: pushAppleHealth
+      tags:
+        - SDK Push
+      summary: Push Apple Health data
+      description: Ingests Apple Health samples pushed from the Spike iOS SDK (JSON).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Data accepted for normalization.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /providers/health_connect/push:
+    post:
+      operationId: pushHealthConnect
+      tags:
+        - SDK Push
+      summary: Push Android Health Connect data
+      description: Ingests Android Health Connect samples pushed from the Spike Android SDK (JSON).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Data accepted for normalization.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /providers/samsung_health_data/push/proto:
+    post:
+      operationId: pushSamsungHealth
+      tags:
+        - SDK Push
+      summary: Push Samsung Health data (protobuf)
+      description: Ingests Samsung Health samples pushed from the Spike SDK as protobuf.
+      requestBody:
+        required: true
+        content:
+          application/x-protobuf:
+            schema:
+              type: string
+              format: binary
+      responses:
+        '200':
+          description: Data accepted for normalization.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    ProviderSlug:
+      name: provider_slug
+      in: path
+      required: true
+      description: >-
+        Provider identifier, for example garmin, fitbit, oura, whoop, dexcom,
+        freestyle_libre, withings, polar, suunto, strava, coros, wahoo,
+        ultrahuman, omron_us, omron_eu, huawei, google_fit, google_health,
+        biostrap, luna, map_my_fitness.
+      schema:
+        type: string
+    RecordId:
+      name: record_id
+      in: path
+      required: true
+      schema:
+        type: string
+    StartTime:
+      name: start_time
+      in: query
+      required: false
+      description: Start of the query window (ISO 8601).
+      schema:
+        type: string
+        format: date-time
+    EndTime:
+      name: end_time
+      in: query
+      required: false
+      description: End of the query window (ISO 8601).
+      schema:
+        type: string
+        format: date-time
+    ProviderQuery:
+      name: provider
+      in: query
+      required: false
+      description: Filter results to a specific provider slug.
+      schema:
+        type: string
+    Metric:
+      name: metric
+      in: query
+      required: false
+      description: >-
+        Metric identifier - for example heartrate, heartrate_resting, hrv_rmssd,
+        hrv_sdnn, glucose, weight, body_fat, spo2, breathing_rate, steps,
+        distance, calories_burned, sleep_duration, sleep_efficiency.
+      schema:
+        type: string
+  responses:
+    Unauthorized:
+      description: Missing or invalid access token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    HmacAuthRequest:
+      type: object
+      required:
+        - application_id
+        - application_user_id
+        - signature
+      properties:
+        application_id:
+          type: string
+          description: The application ID from the Spike admin console.
+        application_user_id:
+          type: string
+          maxLength: 128
+          description: >-
+            Your identifier for the end user (max 128 chars; alphanumeric plus
+            - _ .).
+        signature:
+          type: string
+          description: HMAC-SHA256 of the application_user_id signed with the application secret.
+    AuthToken:
+      type: object
+      properties:
+        access_token:
+          type: string
+          description: JWT access token to send as a Bearer credential.
+        token_type:
+          type: string
+          example: Bearer
+        expires_in:
+          type: integer
+          description: Token lifetime in seconds.
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string

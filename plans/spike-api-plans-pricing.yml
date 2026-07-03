@@ -1,0 +1,136 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: Spike
+providerId: spike-api
+created: '2026-07-03'
+modified: '2026-07-03'
+reconciled: false
+tags:
+- Health Data
+- Wearables
+- Fitness
+- Digital Health
+- Plans
+description: >-
+  Spike sells access to its unified health data platform on a subscription
+  basis, split across two product lines - the Wearables & IoT API and the
+  Nutrition Scanner AI - each offered as a Sandbox (Starter) tier and an
+  Enterprise tier. The published entry point is a Sandbox subscription that
+  "Starts from $450/month"; Enterprise is a custom "tailored package" quoted by
+  sales. There is no free self-serve tier. Spike's per-account cost is
+  ultimately driven by scale of connected users (monthly active users) and the
+  product lines enabled, but Spike does not publish per-MAU unit rates - final
+  pricing is negotiated. Every plan from Sandbox up includes a dedicated
+  implementation engineer.
+notes: >-
+  Exact per-MAU or per-user rates are not published and are not reconciled here.
+  The $450/month figure is the stated Sandbox starting point per product line;
+  Enterprise is custom. Verify current tiers and inclusions on
+  https://www.spikeapi.com/pricing during reconciliation.
+sources:
+- https://www.spikeapi.com/
+- https://www.spikeapi.com/pricing
+- https://docs.spikeapi.com/api-docs/overview
+plans:
+- id: spike-wearables-sandbox
+  name: Wearables & IoT API - Sandbox (Starter)
+  type: paid
+  description: >-
+    Entry subscription to the Wearables & IoT API with 40+ provider
+    integrations and 500+ supported devices, historic data retrieval, and
+    GDPR/HIPAA/CCPA compliance. Includes a dedicated implementation engineer.
+  entries:
+  - label: Sandbox Subscription
+    name: wearables_sandbox_subscription
+    type: flat
+    metric: subscription
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: from $450/month
+    userMultiplied: false
+  elements:
+  - name: 40+ Provider Integrations
+  - name: 500+ Supported Devices
+  - name: Historic Data Retrieval
+  - name: GDPR / HIPAA / CCPA Compliance
+  - name: Dedicated Implementation Engineer
+- id: spike-wearables-enterprise
+  name: Wearables & IoT API - Enterprise
+  type: enterprise
+  description: >-
+    Custom, tailored package for production scale. Adds MCP-compatible
+    AI-ready data, a dedicated account manager, multi-channel support
+    (Slack / email / phone) with priority response, Spike Analytics, product
+    roadmap influence, and expert consulting.
+  entries:
+  - label: Enterprise Agreement
+    name: wearables_enterprise
+    type: flat
+    metric: contract
+    limit: -1
+    timeFrame: year
+    geo: global
+    unit: 1
+    price: custom (tailored package - contact sales)
+    userMultiplied: false
+  elements:
+  - name: Everything in Sandbox
+  - name: MCP-Compatible AI-Ready Data
+  - name: Dedicated Account Manager
+  - name: Multi-Channel Priority Support
+  - name: Spike Analytics
+  - name: Product Roadmap Influence
+  - name: Expert Consulting
+- id: spike-nutrition-sandbox
+  name: Nutrition Scanner AI - Sandbox (Starter)
+  type: paid
+  description: >-
+    Entry subscription to the Nutrition Scanner AI with real-time image, label,
+    and text analysis, global cuisine recognition, and compliance
+    certifications. Includes a dedicated implementation engineer.
+  entries:
+  - label: Sandbox Subscription
+    name: nutrition_sandbox_subscription
+    type: flat
+    metric: subscription
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: from $450/month
+    userMultiplied: false
+  elements:
+  - name: Real-Time Nutrition Analysis
+  - name: Global Cuisine Recognition
+  - name: Compliance Certifications
+  - name: Dedicated Implementation Engineer
+- id: spike-nutrition-enterprise
+  name: Nutrition Scanner AI - Enterprise
+  type: enterprise
+  description: >-
+    Custom, tailored package for the Nutrition Scanner AI at scale. Adds
+    enterprise support, MCP-compatible data, a dedicated account manager, and
+    multi-channel support.
+  entries:
+  - label: Enterprise Agreement
+    name: nutrition_enterprise
+    type: flat
+    metric: contract
+    limit: -1
+    timeFrame: year
+    geo: global
+    unit: 1
+    price: custom (tailored package - contact sales)
+    userMultiplied: false
+  elements:
+  - name: Everything in Sandbox
+  - name: Enterprise-Scale Support
+  - name: MCP-Compatible AI-Ready Data
+  - name: Dedicated Account Manager
+  - name: Multi-Channel Support
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

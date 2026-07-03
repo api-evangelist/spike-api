@@ -1,0 +1,165 @@
+aid: spike-api
+name: Spike
+review:
+  question: Does Spike expose a documented public WebSocket API?
+  answer: false
+  date: '2026-07-03'
+  reviewer: API Evangelist
+  asyncapiSpecCreated: false
+  asyncapiScopeNote: |
+    No AsyncAPI document was authored. Spike's own public real-time surface is
+    outbound HTTP webhooks, not a client-connectable server-push transport.
+    Spike POSTs a JSON array of events (record_change,
+    provider_integration_created, provider_integration_deleted) to a webhook URL
+    the developer configures in the admin console, HMAC-SHA256 signed via the
+    X-Body-Signature header, with retries. There is no wss:// or SSE endpoint on
+    Spike's API for a client to subscribe to, so there is no bidirectional /
+    server-push channel to model in AsyncAPI. The webhook contract is documented
+    prose plus a signed HTTP POST, already captured in the Webhooks API entry and
+    the rate-limits file.
+findings:
+  summary: |
+    Spike does not publish a documented public WebSocket API. Spike (Spike
+    Technologies) is a unified health and wearables data aggregator. Its public
+    developer surface is a REST API at https://app-api.spikeapi.com/v3
+    (confirmed from Spike's own OpenAPI, version 3.0.2, served at
+    https://docs.spikeapi.com/api-reference/openapi.json). Applications
+    authenticate end users with HMAC-SHA256 signatures to mint a JWT
+    (POST /auth/hmac, /auth/client_token, /auth/pkcs1), connect providers via
+    hosted OAuth-style integration flows (/providers/{provider_slug}/integration/init),
+    then query normalized data (sleep, workouts, provider records, time series,
+    statistics), analyze nutrition and lab reports, and read user info - all
+    request/response REST over HTTPS with a Bearer JWT. Real-time delivery is
+    handled by outbound webhooks only. No WebSocket (ws:// or wss://) or
+    Server-Sent Events endpoint is documented anywhere in Spike's API reference,
+    webhooks guide, or OpenAPI as of the review date.
+  openSource: |
+    Spike's platform is a proprietary, hosted SaaS. A GitHub organization exists
+    (github.com/Spike-API) but publishes no open-source server or spec; Spike
+    ships closed-source mobile SDKs (iOS, Android, Flutter, React Native). The
+    API contract is published as an OpenAPI 3.1 document at
+    docs.spikeapi.com/api-reference/openapi.json.
+  transports:
+    - protocol: REST
+      scheme: https
+      baseURL: https://app-api.spikeapi.com/v3
+      documented: true
+      note: Application User API - auth, provider integrations, queries, nutrition, lab reports, users, SDK push. Bearer JWT.
+    - protocol: Webhook
+      scheme: https
+      documented: true
+      note: >-
+        Outbound event delivery to a developer-configured URL. HMAC-SHA256
+        signed (X-Body-Signature). Events - record_change,
+        provider_integration_created, provider_integration_deleted. Server-to-
+        endpoint HTTP, not WebSocket.
+    - protocol: WebSocket
+      scheme: wss
+      documented: false
+      note: No WebSocket endpoint is documented anywhere in Spike's API reference or OpenAPI as of the review date.
+    - protocol: SSE
+      scheme: https
+      documented: false
+      note: No Server-Sent Events endpoint is documented.
+  endpointsConfirmed:
+    - POST   https://app-api.spikeapi.com/v3/auth/hmac
+    - POST   https://app-api.spikeapi.com/v3/auth/client_token
+    - POST   https://app-api.spikeapi.com/v3/auth/pkcs1
+    - GET    https://app-api.spikeapi.com/v3/applicationinfo
+    - GET    https://app-api.spikeapi.com/v3/userinfo
+    - GET    https://app-api.spikeapi.com/v3/userproperties
+    - GET    https://app-api.spikeapi.com/v3/providers/{provider_slug}/integration/init
+    - GET    https://app-api.spikeapi.com/v3/providers/{provider_slug}/integration/init/ic/{ic}
+    - GET    https://app-api.spikeapi.com/v3/providers/{provider_slug}/integration/init_url
+    - DELETE https://app-api.spikeapi.com/v3/providers/{provider_slug}/integration
+    - GET    https://app-api.spikeapi.com/v3/providers/{provider}/integration/callback
+    - GET    https://app-api.spikeapi.com/v3/queries/provider_records
+    - GET    https://app-api.spikeapi.com/v3/queries/provider_records/{record_id}
+    - POST   https://app-api.spikeapi.com/v3/queries/provider_record
+    - GET    https://app-api.spikeapi.com/v3/queries/sleeps
+    - GET    https://app-api.spikeapi.com/v3/queries/sleeps/{sleep_id}
+    - GET    https://app-api.spikeapi.com/v3/queries/workouts
+    - GET    https://app-api.spikeapi.com/v3/queries/workouts/{workout_id}
+    - GET    https://app-api.spikeapi.com/v3/queries/timeseries
+    - GET    https://app-api.spikeapi.com/v3/queries/timeseries/samples
+    - GET    https://app-api.spikeapi.com/v3/queries/timeseries/split
+    - GET    https://app-api.spikeapi.com/v3/queries/statistics
+    - GET    https://app-api.spikeapi.com/v3/queries/statistics/daily
+    - GET    https://app-api.spikeapi.com/v3/queries/statistics/interval
+    - GET    https://app-api.spikeapi.com/v3/queries/statistics/interpolation
+    - GET    https://app-api.spikeapi.com/v3/nutrition_records
+    - POST   https://app-api.spikeapi.com/v3/nutrition_records/image
+    - POST   https://app-api.spikeapi.com/v3/nutrition_records/ingredients/label
+    - POST   https://app-api.spikeapi.com/v3/nutrition_records/text
+    - POST   https://app-api.spikeapi.com/v3/nutrition_records/manual
+    - GET    https://app-api.spikeapi.com/v3/nutrition_records/{nutrition_record_id}
+    - PATCH  https://app-api.spikeapi.com/v3/nutrition_records/{nutrition_record_id}
+    - PUT    https://app-api.spikeapi.com/v3/nutrition_records/{nutrition_record_id}
+    - DELETE https://app-api.spikeapi.com/v3/nutrition_records/{nutrition_record_id}
+    - GET    https://app-api.spikeapi.com/v3/lab_reports
+    - POST   https://app-api.spikeapi.com/v3/lab_reports
+    - POST   https://app-api.spikeapi.com/v3/lab_reports/process
+    - GET    https://app-api.spikeapi.com/v3/lab_reports/{lab_report_id}
+    - POST   https://app-api.spikeapi.com/v3/providers/apple/push
+    - POST   https://app-api.spikeapi.com/v3/providers/apple/push/proto
+    - POST   https://app-api.spikeapi.com/v3/providers/health_connect/push
+    - POST   https://app-api.spikeapi.com/v3/providers/health_connect/push/proto
+    - POST   https://app-api.spikeapi.com/v3/providers/samsung_health_data/push/proto
+  endpointsModeled:
+    - >-
+      Per-provider OAuth callback paths are confirmed to exist in the OpenAPI for
+      garmin, fitbit, oura, whoop, dexcom, dexcom_sandbox, freestyle_libre,
+      withings, polar, suunto, strava, coros, wahoo, ultrahuman, omron_us,
+      omron_eu, huawei, google_fit, google_health, biostrap, luna,
+      map_my_fitness, and testing. The OpenAPI in this repo models a single
+      parameterized /providers/{provider_slug}/integration/callback rather than
+      restating all ~20 confirmed callback paths.
+    - >-
+      Request bodies and response payloads are modeled as generic JSON objects.
+      Spike's published OpenAPI defines detailed component schemas (ProviderRecord,
+      Sleep, Workout, time series samples, nutrition fields, etc.); those were not
+      transcribed field-by-field into this repo's OpenAPI and are represented as
+      open objects.
+    - >-
+      Metric identifiers used in time series / statistics queries (heartrate,
+      heartrate_resting, hrv_rmssd, hrv_sdnn, glucose, weight, body_fat, spo2,
+      breathing_rate, steps, distance, calories_burned, sleep_duration,
+      sleep_efficiency) are confirmed from the metrics matrix. Heart-rate,
+      body/weight, and glucose/CGM data are delivered through the time series,
+      statistics, and provider-records query surfaces rather than dedicated
+      per-domain endpoints.
+    - >-
+      Stress and mindfulness/meditation: Spike markets a Health Insights "Stress
+      Score" (0-100) derived primarily from HRV, but no distinct stress or
+      mindfulness metric identifier or endpoint is documented in the public
+      metrics matrix. Treated as a derived insight, not a confirmed standalone
+      API surface.
+sources:
+  - url: https://docs.spikeapi.com/api-reference/openapi.json
+    type: OpenAPI
+    note: Spike's published OpenAPI 3.1 (info version 3.0.2). Server https://app-api.spikeapi.com/v3. 61 paths, bearer JWT security.
+  - url: https://docs.spikeapi.com/api-docs/authentication
+    type: Documentation
+    note: HMAC-SHA256 signature exchanged at /auth/hmac for a JWT; Authorization Bearer header.
+  - url: https://docs.spikeapi.com/api-docs/webhooks
+    type: Documentation
+    note: Outbound webhook events, X-Body-Signature HMAC-SHA256, up to 10 retries. No WebSocket/SSE.
+  - url: https://docs.spikeapi.com/technical-references/metrics_matrix
+    type: Documentation
+    note: Metric identifiers for time series and statistics queries.
+  - url: https://docs.spikeapi.com/technical-references/provider_matrix
+    type: Documentation
+    note: Supported providers connectable via the integration flows.
+  - url: https://www.spikeapi.com/pricing
+    type: Documentation
+    note: Sandbox from $450/month per product line; Enterprise custom. No free tier.
+actions:
+  asyncapiPath: null
+  apisYmlUpdated: true
+  reason: |
+    No WebSocket or SSE protocol surface exists on Spike's API. Spike's own
+    public API is request/response REST (Application User API) plus outbound,
+    developer-configured HMAC-signed webhooks. No AsyncAPI document was created
+    because there is no client-connectable server-push transport to model; the
+    webhook contract is captured as the Webhooks API entry in apis.yml and in the
+    rate-limits file.

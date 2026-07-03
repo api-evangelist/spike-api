@@ -1,0 +1,76 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
+provider: Spike
+providerId: spike-api
+created: '2026-07-03'
+modified: '2026-07-03'
+reconciled: false
+tags:
+- Health Data
+- Wearables
+- Digital Health
+- Rate Limiting
+- Quotas
+description: >-
+  Spike does not publish fixed numeric rate limits for its Application User API
+  in the public documentation. Access is scoped per application (and per
+  application user, authenticated with a per-user JWT), and practical throughput
+  is governed by the negotiated plan and the volume of connected users rather
+  than a published per-minute request cap. Data ingestion is largely event- and
+  webhook-driven: providers push updates on their own cadence, Spike normalizes
+  them, and then notifies the application via outbound webhooks - so most
+  applications read on webhook triggers instead of polling. The webhook delivery
+  path has an explicit, documented retry policy.
+notes: >-
+  No numeric per-endpoint or per-account request limit is documented as of the
+  review date. Confirm any account-specific quotas with Spike during onboarding.
+  Backfill / historic retrieval volume and provider-side limits (each upstream
+  wearable API has its own caps) also shape effective throughput.
+sources:
+- https://docs.spikeapi.com/api-docs/overview
+- https://docs.spikeapi.com/api-docs/webhooks
+- https://docs.spikeapi.com/api-docs/errors
+- https://docs.spikeapi.com/technical-references/backfill
+responseCodes:
+  throttled: 429
+limits:
+- name: Application User API Requests
+  scope: application
+  metric: requests
+  limit: not published
+  notes: No fixed numeric request-rate limit is documented for the query/command endpoints.
+- name: Per-User Token Scope
+  scope: user
+  metric: requests
+  limit: not published
+  notes: Each end user is authenticated with a distinct JWT; access is scoped to that user's data.
+- name: Provider Backfill / Historic Retrieval
+  scope: user
+  metric: records
+  limit: provider-dependent
+  notes: Historic data retrieval depth and speed depend on each upstream provider's own API limits.
+- name: Webhook Delivery Retries
+  scope: application
+  metric: deliveries
+  limit: up to 10 retries per event
+  notes: >-
+    Non-200 responses, timeouts (>30s), or network errors trigger exponential
+    backoff retries at 5s, 2m, 30m, 2h, then every 12h, up to 10 attempts.
+policies:
+- name: Event-Driven Delivery
+  description: >-
+    Spike pushes record_change, provider_integration_created, and
+    provider_integration_deleted events via outbound webhooks, reducing the need
+    for polling the query endpoints.
+- name: Webhook Retry with Backoff
+  description: >-
+    Endpoints must return HTTP 200 within 30 seconds; otherwise Spike retries
+    with exponential backoff up to 10 times.
+- name: Backoff Strategy
+  description: >-
+    Clients of the query endpoints should implement exponential backoff with
+    jitter and honor Retry-After on any 429 responses.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com
