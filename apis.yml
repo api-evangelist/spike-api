@@ -305,6 +305,10 @@ apis:
     (up to 10) on non-200 responses. Delivery is outbound HTTP only; there is no
     public WebSocket or SSE surface.
 common:
+- type: DomainSecurity
+  url: security/spike-api-domain-security.yml
+- type: Authentication
+  url: authentication/spike-api-authentication.yml
 - type: GitHubOrganization
   url: https://github.com/Spike-API
 - type: LinkedIn
@@ -319,6 +323,8 @@ common:
   url: rate-limits/spike-api-rate-limits.yml
 - type: FinOps
   url: finops/spike-api-finops.yml
+- url: https://www.spikeapi.com/blog
+  type: Blog
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
