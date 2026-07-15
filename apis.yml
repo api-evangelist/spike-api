@@ -305,6 +305,8 @@ apis:
     (up to 10) on non-200 responses. Delivery is outbound HTTP only; there is no
     public WebSocket or SSE surface.
 common:
+- type: AgenticAccess
+  url: agentic-access/spike-api-agentic-access.yml
 - type: DomainSecurity
   url: security/spike-api-domain-security.yml
 - type: Authentication
