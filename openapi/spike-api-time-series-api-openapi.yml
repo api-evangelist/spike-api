@@ -1,0 +1,128 @@
+openapi: 3.1.0
+info:
+  title: Spike Application User Auth Time Series API
+  description: 'Spike (Spike Technologies) unified health and wearables data API. A single integration layer that connects an application to 500+ wearables, IoT devices, CGMs, EMRs, labs, and nutrition sources - Apple Health, Garmin, Fitbit, Oura, Whoop, Dexcom, FreeStyle Libre, Withings, Polar, Suunto, Strava, and more. Applications authenticate their end users with HMAC signatures to mint a JWT access token, connect providers through hosted integration flows, then query normalized health data (sleep, workouts, time series, statistics), analyze nutrition and lab reports, and receive record-change webhooks.
+
+
+    This document is grounded in Spike''s published OpenAPI (v3.0.2) and public documentation at https://docs.spikeapi.com. Path, method, base URL, auth, and provider surfaces are confirmed from the official OpenAPI. Request and response schemas are modeled generically here where full component schemas were not enumerated - see endpointsModeled notes in review.yml.'
+  version: 3.0.2
+  contact:
+    name: Spike Technologies
+    url: https://www.spikeapi.com
+servers:
+- url: https://app-api.spikeapi.com/v3
+  description: Spike Application User API
+security:
+- bearer: []
+tags:
+- name: Time Series
+  description: Query high-resolution metric time series.
+paths:
+  /queries/timeseries:
+    get:
+      operationId: queryTimeSeries
+      tags:
+      - Time Series
+      summary: Time Series
+      description: Returns a time series for a specified metric (for example heartrate, heartrate_resting, hrv_rmssd, hrv_sdnn, glucose, weight, body_fat, spo2, breathing_rate, steps, distance, calories_burned) over a time range.
+      parameters:
+      - $ref: '#/components/parameters/Metric'
+      - $ref: '#/components/parameters/StartTime'
+      - $ref: '#/components/parameters/EndTime'
+      responses:
+        '200':
+          description: A metric time series.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /queries/timeseries/samples:
+    get:
+      operationId: queryTimeSeriesSamples
+      tags:
+      - Time Series
+      summary: Get Samples Time Series
+      description: Returns raw sample-level time series data for a metric.
+      parameters:
+      - $ref: '#/components/parameters/Metric'
+      - $ref: '#/components/parameters/StartTime'
+      - $ref: '#/components/parameters/EndTime'
+      responses:
+        '200':
+          description: Sample-level time series.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /queries/timeseries/split:
+    get:
+      operationId: queryTimeSeriesSplit
+      tags:
+      - Time Series
+      summary: Time Series Data split by provider source
+      description: Returns time series data for a metric split out per contributing provider source.
+      parameters:
+      - $ref: '#/components/parameters/Metric'
+      - $ref: '#/components/parameters/StartTime'
+      - $ref: '#/components/parameters/EndTime'
+      responses:
+        '200':
+          description: Time series split by provider.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  parameters:
+    EndTime:
+      name: end_time
+      in: query
+      required: false
+      description: End of the query window (ISO 8601).
+      schema:
+        type: string
+        format: date-time
+    StartTime:
+      name: start_time
+      in: query
+      required: false
+      description: Start of the query window (ISO 8601).
+      schema:
+        type: string
+        format: date-time
+    Metric:
+      name: metric
+      in: query
+      required: false
+      description: Metric identifier - for example heartrate, heartrate_resting, hrv_rmssd, hrv_sdnn, glucose, weight, body_fat, spo2, breathing_rate, steps, distance, calories_burned, sleep_duration, sleep_efficiency.
+      schema:
+        type: string
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+  responses:
+    Unauthorized:
+      description: Missing or invalid access token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

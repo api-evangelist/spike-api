@@ -1,0 +1,151 @@
+openapi: 3.1.0
+info:
+  title: Spike Application User Auth Provider Records API
+  description: 'Spike (Spike Technologies) unified health and wearables data API. A single integration layer that connects an application to 500+ wearables, IoT devices, CGMs, EMRs, labs, and nutrition sources - Apple Health, Garmin, Fitbit, Oura, Whoop, Dexcom, FreeStyle Libre, Withings, Polar, Suunto, Strava, and more. Applications authenticate their end users with HMAC signatures to mint a JWT access token, connect providers through hosted integration flows, then query normalized health data (sleep, workouts, time series, statistics), analyze nutrition and lab reports, and receive record-change webhooks.
+
+
+    This document is grounded in Spike''s published OpenAPI (v3.0.2) and public documentation at https://docs.spikeapi.com. Path, method, base URL, auth, and provider surfaces are confirmed from the official OpenAPI. Request and response schemas are modeled generically here where full component schemas were not enumerated - see endpointsModeled notes in review.yml.'
+  version: 3.0.2
+  contact:
+    name: Spike Technologies
+    url: https://www.spikeapi.com
+servers:
+- url: https://app-api.spikeapi.com/v3
+  description: Spike Application User API
+security:
+- bearer: []
+tags:
+- name: Provider Records
+  description: Query normalized provider health data records.
+paths:
+  /queries/provider_records:
+    get:
+      operationId: listProviderRecords
+      tags:
+      - Provider Records
+      summary: List Provider Records
+      description: Lists normalized provider records for the user, filtered by time range, provider, and metric.
+      parameters:
+      - $ref: '#/components/parameters/StartTime'
+      - $ref: '#/components/parameters/EndTime'
+      - $ref: '#/components/parameters/ProviderQuery'
+      - $ref: '#/components/parameters/Metric'
+      responses:
+        '200':
+          description: A list of provider records.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /queries/provider_records/{record_id}:
+    parameters:
+    - $ref: '#/components/parameters/RecordId'
+    get:
+      operationId: getProviderRecord
+      tags:
+      - Provider Records
+      summary: Get Provider Record
+      description: Retrieves a single normalized provider record by ID, including its metrics.
+      responses:
+        '200':
+          description: A provider record.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /queries/provider_record:
+    post:
+      operationId: queryProviderRecordCompat
+      tags:
+      - Provider Records
+      summary: 'COMPAT: Query provider records'
+      description: Compatibility endpoint that queries provider records via a POST body.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Matching provider records.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  parameters:
+    EndTime:
+      name: end_time
+      in: query
+      required: false
+      description: End of the query window (ISO 8601).
+      schema:
+        type: string
+        format: date-time
+    StartTime:
+      name: start_time
+      in: query
+      required: false
+      description: Start of the query window (ISO 8601).
+      schema:
+        type: string
+        format: date-time
+    RecordId:
+      name: record_id
+      in: path
+      required: true
+      schema:
+        type: string
+    Metric:
+      name: metric
+      in: query
+      required: false
+      description: Metric identifier - for example heartrate, heartrate_resting, hrv_rmssd, hrv_sdnn, glucose, weight, body_fat, spo2, breathing_rate, steps, distance, calories_burned, sleep_duration, sleep_efficiency.
+      schema:
+        type: string
+    ProviderQuery:
+      name: provider
+      in: query
+      required: false
+      description: Filter results to a specific provider slug.
+      schema:
+        type: string
+  responses:
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid access token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

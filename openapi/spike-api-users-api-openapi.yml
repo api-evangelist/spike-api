@@ -1,0 +1,92 @@
+openapi: 3.1.0
+info:
+  title: Spike Application User Auth Users API
+  description: 'Spike (Spike Technologies) unified health and wearables data API. A single integration layer that connects an application to 500+ wearables, IoT devices, CGMs, EMRs, labs, and nutrition sources - Apple Health, Garmin, Fitbit, Oura, Whoop, Dexcom, FreeStyle Libre, Withings, Polar, Suunto, Strava, and more. Applications authenticate their end users with HMAC signatures to mint a JWT access token, connect providers through hosted integration flows, then query normalized health data (sleep, workouts, time series, statistics), analyze nutrition and lab reports, and receive record-change webhooks.
+
+
+    This document is grounded in Spike''s published OpenAPI (v3.0.2) and public documentation at https://docs.spikeapi.com. Path, method, base URL, auth, and provider surfaces are confirmed from the official OpenAPI. Request and response schemas are modeled generically here where full component schemas were not enumerated - see endpointsModeled notes in review.yml.'
+  version: 3.0.2
+  contact:
+    name: Spike Technologies
+    url: https://www.spikeapi.com
+servers:
+- url: https://app-api.spikeapi.com/v3
+  description: Spike Application User API
+security:
+- bearer: []
+tags:
+- name: Users
+  description: Current user, user properties, and application info.
+paths:
+  /applicationinfo:
+    get:
+      operationId: getApplicationInfo
+      tags:
+      - Users
+      summary: Application Information
+      description: Returns application-level configuration and the list of available providers.
+      responses:
+        '200':
+          description: Application information.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /userinfo:
+    get:
+      operationId: getUserInfo
+      tags:
+      - Users
+      summary: User Information
+      description: Returns the current authenticated user, including connected provider integrations.
+      responses:
+        '200':
+          description: User information.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /userproperties:
+    get:
+      operationId: getUserProperties
+      tags:
+      - Users
+      summary: User Properties
+      description: Returns properties associated with the current user.
+      responses:
+        '200':
+          description: User properties.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+  responses:
+    Unauthorized:
+      description: Missing or invalid access token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

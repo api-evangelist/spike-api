@@ -1,0 +1,109 @@
+openapi: 3.1.0
+info:
+  title: Spike Application User Auth Sleep API
+  description: 'Spike (Spike Technologies) unified health and wearables data API. A single integration layer that connects an application to 500+ wearables, IoT devices, CGMs, EMRs, labs, and nutrition sources - Apple Health, Garmin, Fitbit, Oura, Whoop, Dexcom, FreeStyle Libre, Withings, Polar, Suunto, Strava, and more. Applications authenticate their end users with HMAC signatures to mint a JWT access token, connect providers through hosted integration flows, then query normalized health data (sleep, workouts, time series, statistics), analyze nutrition and lab reports, and receive record-change webhooks.
+
+
+    This document is grounded in Spike''s published OpenAPI (v3.0.2) and public documentation at https://docs.spikeapi.com. Path, method, base URL, auth, and provider surfaces are confirmed from the official OpenAPI. Request and response schemas are modeled generically here where full component schemas were not enumerated - see endpointsModeled notes in review.yml.'
+  version: 3.0.2
+  contact:
+    name: Spike Technologies
+    url: https://www.spikeapi.com
+servers:
+- url: https://app-api.spikeapi.com/v3
+  description: Spike Application User API
+security:
+- bearer: []
+tags:
+- name: Sleep
+  description: Query normalized sleep sessions and stages.
+paths:
+  /queries/sleeps:
+    get:
+      operationId: listSleeps
+      tags:
+      - Sleep
+      summary: List Sleeps
+      description: Lists normalized sleep sessions with stage breakdowns, duration, and efficiency.
+      parameters:
+      - $ref: '#/components/parameters/StartTime'
+      - $ref: '#/components/parameters/EndTime'
+      responses:
+        '200':
+          description: A list of sleep sessions.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /queries/sleeps/{sleep_id}:
+    parameters:
+    - name: sleep_id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      operationId: getSleep
+      tags:
+      - Sleep
+      summary: Get Sleep
+      description: Retrieves a single sleep session by ID with full stage data.
+      responses:
+        '200':
+          description: A sleep session.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  parameters:
+    EndTime:
+      name: end_time
+      in: query
+      required: false
+      description: End of the query window (ISO 8601).
+      schema:
+        type: string
+        format: date-time
+    StartTime:
+      name: start_time
+      in: query
+      required: false
+      description: Start of the query window (ISO 8601).
+      schema:
+        type: string
+        format: date-time
+  responses:
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid access token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

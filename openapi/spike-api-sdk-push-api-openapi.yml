@@ -1,0 +1,98 @@
+openapi: 3.1.0
+info:
+  title: Spike Application User Auth SDK Push API
+  description: 'Spike (Spike Technologies) unified health and wearables data API. A single integration layer that connects an application to 500+ wearables, IoT devices, CGMs, EMRs, labs, and nutrition sources - Apple Health, Garmin, Fitbit, Oura, Whoop, Dexcom, FreeStyle Libre, Withings, Polar, Suunto, Strava, and more. Applications authenticate their end users with HMAC signatures to mint a JWT access token, connect providers through hosted integration flows, then query normalized health data (sleep, workouts, time series, statistics), analyze nutrition and lab reports, and receive record-change webhooks.
+
+
+    This document is grounded in Spike''s published OpenAPI (v3.0.2) and public documentation at https://docs.spikeapi.com. Path, method, base URL, auth, and provider surfaces are confirmed from the official OpenAPI. Request and response schemas are modeled generically here where full component schemas were not enumerated - see endpointsModeled notes in review.yml.'
+  version: 3.0.2
+  contact:
+    name: Spike Technologies
+    url: https://www.spikeapi.com
+servers:
+- url: https://app-api.spikeapi.com/v3
+  description: Spike Application User API
+security:
+- bearer: []
+tags:
+- name: SDK Push
+  description: Ingest on-device health data pushed from the mobile SDKs.
+paths:
+  /providers/apple/push:
+    post:
+      operationId: pushAppleHealth
+      tags:
+      - SDK Push
+      summary: Push Apple Health data
+      description: Ingests Apple Health samples pushed from the Spike iOS SDK (JSON).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Data accepted for normalization.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /providers/health_connect/push:
+    post:
+      operationId: pushHealthConnect
+      tags:
+      - SDK Push
+      summary: Push Android Health Connect data
+      description: Ingests Android Health Connect samples pushed from the Spike Android SDK (JSON).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Data accepted for normalization.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /providers/samsung_health_data/push/proto:
+    post:
+      operationId: pushSamsungHealth
+      tags:
+      - SDK Push
+      summary: Push Samsung Health data (protobuf)
+      description: Ingests Samsung Health samples pushed from the Spike SDK as protobuf.
+      requestBody:
+        required: true
+        content:
+          application/x-protobuf:
+            schema:
+              type: string
+              format: binary
+      responses:
+        '200':
+          description: Data accepted for normalization.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+  responses:
+    Unauthorized:
+      description: Missing or invalid access token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

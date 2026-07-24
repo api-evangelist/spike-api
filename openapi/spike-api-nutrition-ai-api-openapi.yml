@@ -1,0 +1,260 @@
+openapi: 3.1.0
+info:
+  title: Spike Application User Auth Nutrition AI API
+  description: 'Spike (Spike Technologies) unified health and wearables data API. A single integration layer that connects an application to 500+ wearables, IoT devices, CGMs, EMRs, labs, and nutrition sources - Apple Health, Garmin, Fitbit, Oura, Whoop, Dexcom, FreeStyle Libre, Withings, Polar, Suunto, Strava, and more. Applications authenticate their end users with HMAC signatures to mint a JWT access token, connect providers through hosted integration flows, then query normalized health data (sleep, workouts, time series, statistics), analyze nutrition and lab reports, and receive record-change webhooks.
+
+
+    This document is grounded in Spike''s published OpenAPI (v3.0.2) and public documentation at https://docs.spikeapi.com. Path, method, base URL, auth, and provider surfaces are confirmed from the official OpenAPI. Request and response schemas are modeled generically here where full component schemas were not enumerated - see endpointsModeled notes in review.yml.'
+  version: 3.0.2
+  contact:
+    name: Spike Technologies
+    url: https://www.spikeapi.com
+servers:
+- url: https://app-api.spikeapi.com/v3
+  description: Spike Application User API
+security:
+- bearer: []
+tags:
+- name: Nutrition AI
+  description: Analyze and manage nutrition records.
+paths:
+  /nutrition_records:
+    get:
+      operationId: listNutritionRecords
+      tags:
+      - Nutrition AI
+      summary: List nutrition records
+      description: Lists nutrition records for the user over a time range.
+      parameters:
+      - $ref: '#/components/parameters/StartTime'
+      - $ref: '#/components/parameters/EndTime'
+      responses:
+        '200':
+          description: A list of nutrition records.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /nutrition_records/image:
+    post:
+      operationId: analyzeNutritionImage
+      tags:
+      - Nutrition AI
+      summary: Analyze a food image
+      description: Analyzes a base64 food image and returns a structured nutrition record.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: The analyzed nutrition record.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /nutrition_records/ingredients/label:
+    post:
+      operationId: analyzeNutritionLabel
+      tags:
+      - Nutrition AI
+      summary: Analyze a nutrition-facts label
+      description: Analyzes a nutrition-facts label image and returns structured nutrition fields.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: The analyzed nutrition record.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /nutrition_records/text:
+    post:
+      operationId: analyzeNutritionText
+      tags:
+      - Nutrition AI
+      summary: Analyze a free-text meal
+      description: Analyzes a free-text meal description and returns a structured nutrition record.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: The analyzed nutrition record.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /nutrition_records/manual:
+    post:
+      operationId: createManualNutritionRecord
+      tags:
+      - Nutrition AI
+      summary: Upload a manual nutrition record
+      description: Creates a nutrition record from manually supplied fields.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: The created nutrition record.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /nutrition_records/{nutrition_record_id}:
+    parameters:
+    - name: nutrition_record_id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      operationId: getNutritionRecord
+      tags:
+      - Nutrition AI
+      summary: Get a nutrition record
+      description: Retrieves a nutrition record by ID.
+      responses:
+        '200':
+          description: The nutrition record.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      operationId: modifyNutritionRecord
+      tags:
+      - Nutrition AI
+      summary: Modify a nutrition record
+      description: Adjusts a nutrition record, for example changing portion size.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: The updated nutrition record.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      operationId: replaceNutritionRecord
+      tags:
+      - Nutrition AI
+      summary: Replace a nutrition record
+      description: Replaces an existing nutrition record.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: The replaced nutrition record.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      operationId: deleteNutritionRecord
+      tags:
+      - Nutrition AI
+      summary: Delete a nutrition record
+      description: Removes a nutrition record.
+      responses:
+        '200':
+          description: The record was deleted.
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  parameters:
+    EndTime:
+      name: end_time
+      in: query
+      required: false
+      description: End of the query window (ISO 8601).
+      schema:
+        type: string
+        format: date-time
+    StartTime:
+      name: start_time
+      in: query
+      required: false
+      description: Start of the query window (ISO 8601).
+      schema:
+        type: string
+        format: date-time
+  responses:
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid access token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

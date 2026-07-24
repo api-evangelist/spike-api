@@ -1,0 +1,141 @@
+openapi: 3.1.0
+info:
+  title: Spike Application User Auth API
+  description: 'Spike (Spike Technologies) unified health and wearables data API. A single integration layer that connects an application to 500+ wearables, IoT devices, CGMs, EMRs, labs, and nutrition sources - Apple Health, Garmin, Fitbit, Oura, Whoop, Dexcom, FreeStyle Libre, Withings, Polar, Suunto, Strava, and more. Applications authenticate their end users with HMAC signatures to mint a JWT access token, connect providers through hosted integration flows, then query normalized health data (sleep, workouts, time series, statistics), analyze nutrition and lab reports, and receive record-change webhooks.
+
+
+    This document is grounded in Spike''s published OpenAPI (v3.0.2) and public documentation at https://docs.spikeapi.com. Path, method, base URL, auth, and provider surfaces are confirmed from the official OpenAPI. Request and response schemas are modeled generically here where full component schemas were not enumerated - see endpointsModeled notes in review.yml.'
+  version: 3.0.2
+  contact:
+    name: Spike Technologies
+    url: https://www.spikeapi.com
+servers:
+- url: https://app-api.spikeapi.com/v3
+  description: Spike Application User API
+security:
+- bearer: []
+tags:
+- name: Auth
+  description: Authenticate end users and mint JWT access tokens.
+paths:
+  /auth/hmac:
+    post:
+      operationId: authHmac
+      tags:
+      - Auth
+      summary: Authenticate with an HMAC signature
+      description: Exchange an HMAC-SHA256 signature (the application user ID signed with the application secret) for a JWT access token. No pre-registration is required; users are provisioned on first authentication.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HmacAuthRequest'
+      responses:
+        '200':
+          description: A JWT access token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthToken'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /auth/client_token:
+    post:
+      operationId: authClientToken
+      tags:
+      - Auth
+      summary: Authenticate with a client token
+      description: Mint an access token using an application-level client token grant.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: A JWT access token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthToken'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /auth/pkcs1:
+    post:
+      operationId: authPkcs1
+      tags:
+      - Auth
+      summary: Authenticate with a PKCS1 signature
+      description: Exchange an RSA PKCS1 signature for a JWT access token.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: A JWT access token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthToken'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+    HmacAuthRequest:
+      type: object
+      required:
+      - application_id
+      - application_user_id
+      - signature
+      properties:
+        application_id:
+          type: string
+          description: The application ID from the Spike admin console.
+        application_user_id:
+          type: string
+          maxLength: 128
+          description: Your identifier for the end user (max 128 chars; alphanumeric plus - _ .).
+        signature:
+          type: string
+          description: HMAC-SHA256 of the application_user_id signed with the application secret.
+    AuthToken:
+      type: object
+      properties:
+        access_token:
+          type: string
+          description: JWT access token to send as a Bearer credential.
+        token_type:
+          type: string
+          example: Bearer
+        expires_in:
+          type: integer
+          description: Token lifetime in seconds.
+  responses:
+    Unauthorized:
+      description: Missing or invalid access token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
