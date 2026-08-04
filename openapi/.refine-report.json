@@ -1,0 +1,34 @@
+{
+  "provider": "spike-api",
+  "sources": [
+    "spike-api-auth-api-openapi.yml",
+    "spike-api-lab-reports-api-openapi.yml",
+    "spike-api-nutrition-ai-api-openapi.yml",
+    "spike-api-provider-integrations-api-openapi.yml",
+    "spike-api-provider-records-api-openapi.yml",
+    "spike-api-sdk-push-api-openapi.yml",
+    "spike-api-sleep-api-openapi.yml",
+    "spike-api-statistics-api-openapi.yml",
+    "spike-api-time-series-api-openapi.yml",
+    "spike-api-users-api-openapi.yml",
+    "spike-api-workouts-api-openapi.yml"
+  ],
+  "outputs": [
+    "spike-api-auth-api-openapi.yml",
+    "spike-api-lab-reports-api-openapi.yml",
+    "spike-api-nutrition-ai-api-openapi.yml",
+    "spike-api-provider-integrations-api-openapi.yml",
+    "spike-api-provider-records-api-openapi.yml",
+    "spike-api-sdk-push-api-openapi.yml",
+    "spike-api-sleep-api-openapi.yml",
+    "spike-api-statistics-api-openapi.yml",
+    "spike-api-time-series-api-openapi.yml",
+    "spike-api-users-api-openapi.yml",
+    "spike-api-workouts-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
