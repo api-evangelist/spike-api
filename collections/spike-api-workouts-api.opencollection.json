@@ -1,0 +1,67 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Spike Application User Auth Workouts API",
+    "version": "3.0.2"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Workouts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Workouts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app-api.spikeapi.com/v3/queries/workouts",
+            "params": [
+              {
+                "name": "start_time",
+                "value": "",
+                "type": "query",
+                "description": "Start of the query window (ISO 8601)."
+              },
+              {
+                "name": "end_time",
+                "value": "",
+                "type": "query",
+                "description": "End of the query window (ISO 8601)."
+              }
+            ]
+          },
+          "docs": "Lists normalized workouts / physical activities with per-activity metrics."
+        },
+        {
+          "info": {
+            "name": "Get Workout",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app-api.spikeapi.com/v3/queries/workouts/:workout_id",
+            "params": [
+              {
+                "name": "workout_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieves a single workout by ID with full metric detail."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

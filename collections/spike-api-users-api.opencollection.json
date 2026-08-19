@@ -1,0 +1,57 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Spike Application User Auth Users API",
+    "version": "3.0.2"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Users",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Application Information",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app-api.spikeapi.com/v3/applicationinfo"
+          },
+          "docs": "Returns application-level configuration and the list of available providers."
+        },
+        {
+          "info": {
+            "name": "User Information",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app-api.spikeapi.com/v3/userinfo"
+          },
+          "docs": "Returns the current authenticated user, including connected provider integrations."
+        },
+        {
+          "info": {
+            "name": "User Properties",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app-api.spikeapi.com/v3/userproperties"
+          },
+          "docs": "Returns properties associated with the current user."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

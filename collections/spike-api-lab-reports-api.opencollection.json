@@ -1,0 +1,97 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Spike Application User Auth Lab Reports API",
+    "version": "3.0.2"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Lab Reports",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List lab reports",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app-api.spikeapi.com/v3/lab_reports",
+            "params": [
+              {
+                "name": "start_time",
+                "value": "",
+                "type": "query",
+                "description": "Start of the query window (ISO 8601)."
+              },
+              {
+                "name": "end_time",
+                "value": "",
+                "type": "query",
+                "description": "End of the query window (ISO 8601)."
+              }
+            ]
+          },
+          "docs": "Lists lab reports for the user over a time range."
+        },
+        {
+          "info": {
+            "name": "Upload a lab report",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app-api.spikeapi.com/v3/lab_reports",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Uploads a base64-encoded lab report document for AI extraction."
+        },
+        {
+          "info": {
+            "name": "Process a lab report",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app-api.spikeapi.com/v3/lab_reports/process",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Triggers or re-triggers AI processing of an uploaded lab report document."
+        },
+        {
+          "info": {
+            "name": "Get a lab report",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app-api.spikeapi.com/v3/lab_reports/:lab_report_id",
+            "params": [
+              {
+                "name": "lab_report_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieves a lab report by ID with structured biomarker results."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

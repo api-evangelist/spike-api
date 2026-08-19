@@ -1,0 +1,635 @@
+{
+  "item": [
+    {
+      "id": "1d180e65-2702-4ab0-9399-3049ca0668cd",
+      "name": "Provider Integrations",
+      "description": {
+        "content": "Connect and disconnect a user's health data providers.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "19f93cd3-f0bf-4569-b1c7-93206ad048e0",
+          "name": "Initialize a provider integration",
+          "request": {
+            "name": "Initialize a provider integration",
+            "description": {
+              "content": "Start the hosted integration flow for a provider (for example garmin, fitbit, oura, whoop, dexcom, withings). Redirects the user into the provider's OAuth-style consent screen.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "providers",
+                ":provider_slug",
+                "integration",
+                "init"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "provider_slug",
+                  "description": "(Required) Provider identifier, for example garmin, fitbit, oura, whoop, dexcom, freestyle_libre, withings, polar, suunto, strava, coros, wahoo, ultrahuman, omron_us, omron_eu, huawei, google_fit, google_health, biostrap, luna, map_my_fitness."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "4949236e-13d6-4466-93b6-ef0edba4f709",
+              "name": "Redirect to the provider authorization screen.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "providers",
+                    ":provider_slug",
+                    "integration",
+                    "init"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "provider_slug",
+                      "description": "(Required) Provider identifier, for example garmin, fitbit, oura, whoop, dexcom, freestyle_libre, withings, polar, suunto, strava, coros, wahoo, ultrahuman, omron_us, omron_eu, huawei, google_fit, google_health, biostrap, luna, map_my_fitness."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Found",
+              "code": 302,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "5529157f-9b41-4ae2-9f06-f050c2d1b70c",
+              "name": "Missing or invalid access token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "providers",
+                    ":provider_slug",
+                    "integration",
+                    "init"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "provider_slug",
+                      "description": "(Required) Provider identifier, for example garmin, fitbit, oura, whoop, dexcom, freestyle_libre, withings, polar, suunto, strava, coros, wahoo, ultrahuman, omron_us, omron_eu, huawei, google_fit, google_health, biostrap, luna, map_my_fitness."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "262f0a56-d83b-434f-8491-d98d4a30584c",
+          "name": "Get a provider integration init URL",
+          "request": {
+            "name": "Get a provider integration init URL",
+            "description": {
+              "content": "Returns the URL that begins the hosted integration flow for a provider, for embedding in your own UI.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "providers",
+                ":provider_slug",
+                "integration",
+                "init_url"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "provider_slug",
+                  "description": "(Required) Provider identifier, for example garmin, fitbit, oura, whoop, dexcom, freestyle_libre, withings, polar, suunto, strava, coros, wahoo, ultrahuman, omron_us, omron_eu, huawei, google_fit, google_health, biostrap, luna, map_my_fitness."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "650c1c18-19da-48ea-a5e2-6e2a29451835",
+              "name": "The integration initialization URL.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "providers",
+                    ":provider_slug",
+                    "integration",
+                    "init_url"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "provider_slug",
+                      "description": "(Required) Provider identifier, for example garmin, fitbit, oura, whoop, dexcom, freestyle_libre, withings, polar, suunto, strava, coros, wahoo, ultrahuman, omron_us, omron_eu, huawei, google_fit, google_health, biostrap, luna, map_my_fitness."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"key_0\": false,\n  \"key_1\": true,\n  \"key_2\": 3038\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "32edea02-a27d-4897-ae3f-9f2df8da72f3",
+              "name": "Missing or invalid access token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "providers",
+                    ":provider_slug",
+                    "integration",
+                    "init_url"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "provider_slug",
+                      "description": "(Required) Provider identifier, for example garmin, fitbit, oura, whoop, dexcom, freestyle_libre, withings, polar, suunto, strava, coros, wahoo, ultrahuman, omron_us, omron_eu, huawei, google_fit, google_health, biostrap, luna, map_my_fitness."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d9701b24-6db0-418e-b3e7-814b63b3a962",
+          "name": "Delete a provider integration",
+          "request": {
+            "name": "Delete a provider integration",
+            "description": {
+              "content": "Disconnects a provider from the current user and removes the stored authorization.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "providers",
+                ":provider_slug",
+                "integration"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "provider_slug",
+                  "description": "(Required) Provider identifier, for example garmin, fitbit, oura, whoop, dexcom, freestyle_libre, withings, polar, suunto, strava, coros, wahoo, ultrahuman, omron_us, omron_eu, huawei, google_fit, google_health, biostrap, luna, map_my_fitness."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "a5b39855-d268-473c-8c9b-0b2be1868820",
+              "name": "The integration was deleted.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "providers",
+                    ":provider_slug",
+                    "integration"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "provider_slug",
+                      "description": "(Required) Provider identifier, for example garmin, fitbit, oura, whoop, dexcom, freestyle_libre, withings, polar, suunto, strava, coros, wahoo, ultrahuman, omron_us, omron_eu, huawei, google_fit, google_health, biostrap, luna, map_my_fitness."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "cbeda3fe-6180-4f8b-a096-a021a693636d",
+              "name": "Missing or invalid access token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "providers",
+                    ":provider_slug",
+                    "integration"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "provider_slug",
+                      "description": "(Required) Provider identifier, for example garmin, fitbit, oura, whoop, dexcom, freestyle_libre, withings, polar, suunto, strava, coros, wahoo, ultrahuman, omron_us, omron_eu, huawei, google_fit, google_health, biostrap, luna, map_my_fitness."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e1630627-bd0d-493f-a797-5391b2d8489c",
+              "name": "The requested resource was not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "providers",
+                    ":provider_slug",
+                    "integration"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "provider_slug",
+                      "description": "(Required) Provider identifier, for example garmin, fitbit, oura, whoop, dexcom, freestyle_libre, withings, polar, suunto, strava, coros, wahoo, ultrahuman, omron_us, omron_eu, huawei, google_fit, google_health, biostrap, luna, map_my_fitness."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "8ac1c26c-0670-47b5-85c3-9d6ba4dc2b9a",
+          "name": "Provider OAuth callback",
+          "request": {
+            "name": "Provider OAuth callback",
+            "description": {
+              "content": "OAuth redirect callback endpoint hit by the provider after the user authorizes access. Each provider also has an explicit callback path (for example /providers/garmin/integration/callback, /providers/fitbit/integration/callback, /providers/dexcom/integration/callback).",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "providers",
+                ":provider_slug",
+                "integration",
+                "callback"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "provider_slug",
+                  "description": "(Required) Provider identifier, for example garmin, fitbit, oura, whoop, dexcom, freestyle_libre, withings, polar, suunto, strava, coros, wahoo, ultrahuman, omron_us, omron_eu, huawei, google_fit, google_health, biostrap, luna, map_my_fitness."
+                }
+              ]
+            },
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "9066ffd7-a236-416a-8d37-057ee562f02b",
+              "name": "Redirect back into the application after linking.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "providers",
+                    ":provider_slug",
+                    "integration",
+                    "callback"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "provider_slug",
+                      "description": "(Required) Provider identifier, for example garmin, fitbit, oura, whoop, dexcom, freestyle_libre, withings, polar, suunto, strava, coros, wahoo, ultrahuman, omron_us, omron_eu, huawei, google_fit, google_health, biostrap, luna, map_my_fitness."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Found",
+              "code": 302,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://app-api.spikeapi.com/v3",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "e3c10871-3337-40e1-930c-17949e6aa611",
+    "name": "Spike Application User Auth Provider Integrations API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Spike (Spike Technologies) unified health and wearables data API. A single integration layer that connects an application to 500+ wearables, IoT devices, CGMs, EMRs, labs, and nutrition sources - Apple Health, Garmin, Fitbit, Oura, Whoop, Dexcom, FreeStyle Libre, Withings, Polar, Suunto, Strava, and more. Applications authenticate their end users with HMAC signatures to mint a JWT access token, connect providers through hosted integration flows, then query normalized health data (sleep, workouts, time series, statistics), analyze nutrition and lab reports, and receive record-change webhooks.\n\nThis document is grounded in Spike's published OpenAPI (v3.0.2) and public documentation at https://docs.spikeapi.com. Path, method, base URL, auth, and provider surfaces are confirmed from the official OpenAPI. Request and response schemas are modeled generically here where full component schemas were not enumerated - see endpointsModeled notes in review.yml.\n\nContact Support:\n Name: Spike Technologies",
+      "type": "text/plain"
+    }
+  }
+}

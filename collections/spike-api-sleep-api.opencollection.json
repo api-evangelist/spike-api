@@ -1,0 +1,67 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Spike Application User Auth Sleep API",
+    "version": "3.0.2"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Sleep",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Sleeps",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app-api.spikeapi.com/v3/queries/sleeps",
+            "params": [
+              {
+                "name": "start_time",
+                "value": "",
+                "type": "query",
+                "description": "Start of the query window (ISO 8601)."
+              },
+              {
+                "name": "end_time",
+                "value": "",
+                "type": "query",
+                "description": "End of the query window (ISO 8601)."
+              }
+            ]
+          },
+          "docs": "Lists normalized sleep sessions with stage breakdowns, duration, and efficiency."
+        },
+        {
+          "info": {
+            "name": "Get Sleep",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app-api.spikeapi.com/v3/queries/sleeps/:sleep_id",
+            "params": [
+              {
+                "name": "sleep_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieves a single sleep session by ID with full stage data."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

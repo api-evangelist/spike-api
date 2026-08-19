@@ -1,0 +1,100 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Spike Application User Auth Provider Integrations API",
+    "version": "3.0.2"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Provider Integrations",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Initialize a provider integration",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app-api.spikeapi.com/v3/providers/:provider_slug/integration/init",
+            "params": [
+              {
+                "name": "provider_slug",
+                "value": "",
+                "type": "path",
+                "description": "Provider identifier, for example garmin, fitbit, oura, whoop, dexcom, freestyle_libre, withings, polar, suunto, strava, coros, wahoo, ultrahuman, omron_us, omron_eu, huawei, google_fit, google_health, biostrap, luna, map_my_fitness."
+              }
+            ]
+          },
+          "docs": "Start the hosted integration flow for a provider (for example garmin, fitbit, oura, whoop, dexcom, withings). Redirects the user into the provider's OAuth-style consent screen."
+        },
+        {
+          "info": {
+            "name": "Get a provider integration init URL",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app-api.spikeapi.com/v3/providers/:provider_slug/integration/init_url",
+            "params": [
+              {
+                "name": "provider_slug",
+                "value": "",
+                "type": "path",
+                "description": "Provider identifier, for example garmin, fitbit, oura, whoop, dexcom, freestyle_libre, withings, polar, suunto, strava, coros, wahoo, ultrahuman, omron_us, omron_eu, huawei, google_fit, google_health, biostrap, luna, map_my_fitness."
+              }
+            ]
+          },
+          "docs": "Returns the URL that begins the hosted integration flow for a provider, for embedding in your own UI."
+        },
+        {
+          "info": {
+            "name": "Delete a provider integration",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://app-api.spikeapi.com/v3/providers/:provider_slug/integration",
+            "params": [
+              {
+                "name": "provider_slug",
+                "value": "",
+                "type": "path",
+                "description": "Provider identifier, for example garmin, fitbit, oura, whoop, dexcom, freestyle_libre, withings, polar, suunto, strava, coros, wahoo, ultrahuman, omron_us, omron_eu, huawei, google_fit, google_health, biostrap, luna, map_my_fitness."
+              }
+            ]
+          },
+          "docs": "Disconnects a provider from the current user and removes the stored authorization."
+        },
+        {
+          "info": {
+            "name": "Provider OAuth callback",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app-api.spikeapi.com/v3/providers/:provider_slug/integration/callback",
+            "params": [
+              {
+                "name": "provider_slug",
+                "value": "",
+                "type": "path",
+                "description": "Provider identifier, for example garmin, fitbit, oura, whoop, dexcom, freestyle_libre, withings, polar, suunto, strava, coros, wahoo, ultrahuman, omron_us, omron_eu, huawei, google_fit, google_health, biostrap, luna, map_my_fitness."
+              }
+            ]
+          },
+          "docs": "OAuth redirect callback endpoint hit by the provider after the user authorizes access. Each provider also has an explicit callback path (for example /providers/garmin/integration/callback, /providers/fitbit/integration/callback, /providers/dexcom/integration/callback)."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

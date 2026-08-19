@@ -1,0 +1,117 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Spike Application User Auth Time Series API",
+    "version": "3.0.2"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Time Series",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Time Series",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app-api.spikeapi.com/v3/queries/timeseries",
+            "params": [
+              {
+                "name": "metric",
+                "value": "",
+                "type": "query",
+                "description": "Metric identifier - for example heartrate, heartrate_resting, hrv_rmssd, hrv_sdnn, glucose, weight, body_fat, spo2, breathing_rate, steps, distance, calories_burned, sleep_duration, sleep_efficiency."
+              },
+              {
+                "name": "start_time",
+                "value": "",
+                "type": "query",
+                "description": "Start of the query window (ISO 8601)."
+              },
+              {
+                "name": "end_time",
+                "value": "",
+                "type": "query",
+                "description": "End of the query window (ISO 8601)."
+              }
+            ]
+          },
+          "docs": "Returns a time series for a specified metric (for example heartrate, heartrate_resting, hrv_rmssd, hrv_sdnn, glucose, weight, body_fat, spo2, breathing_rate, steps, distance, calories_burned) over a time range."
+        },
+        {
+          "info": {
+            "name": "Get Samples Time Series",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app-api.spikeapi.com/v3/queries/timeseries/samples",
+            "params": [
+              {
+                "name": "metric",
+                "value": "",
+                "type": "query",
+                "description": "Metric identifier - for example heartrate, heartrate_resting, hrv_rmssd, hrv_sdnn, glucose, weight, body_fat, spo2, breathing_rate, steps, distance, calories_burned, sleep_duration, sleep_efficiency."
+              },
+              {
+                "name": "start_time",
+                "value": "",
+                "type": "query",
+                "description": "Start of the query window (ISO 8601)."
+              },
+              {
+                "name": "end_time",
+                "value": "",
+                "type": "query",
+                "description": "End of the query window (ISO 8601)."
+              }
+            ]
+          },
+          "docs": "Returns raw sample-level time series data for a metric."
+        },
+        {
+          "info": {
+            "name": "Time Series Data split by provider source",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app-api.spikeapi.com/v3/queries/timeseries/split",
+            "params": [
+              {
+                "name": "metric",
+                "value": "",
+                "type": "query",
+                "description": "Metric identifier - for example heartrate, heartrate_resting, hrv_rmssd, hrv_sdnn, glucose, weight, body_fat, spo2, breathing_rate, steps, distance, calories_burned, sleep_duration, sleep_efficiency."
+              },
+              {
+                "name": "start_time",
+                "value": "",
+                "type": "query",
+                "description": "Start of the query window (ISO 8601)."
+              },
+              {
+                "name": "end_time",
+                "value": "",
+                "type": "query",
+                "description": "End of the query window (ISO 8601)."
+              }
+            ]
+          },
+          "docs": "Returns time series data for a metric split out per contributing provider source."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

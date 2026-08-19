@@ -1,0 +1,69 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Spike Application User Auth API",
+    "version": "3.0.2"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Auth",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Authenticate with an HMAC signature",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app-api.spikeapi.com/v3/auth/hmac",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Exchange an HMAC-SHA256 signature (the application user ID signed with the application secret) for a JWT access token. No pre-registration is required; users are provisioned on first authentication."
+        },
+        {
+          "info": {
+            "name": "Authenticate with a client token",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app-api.spikeapi.com/v3/auth/client_token",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Mint an access token using an application-level client token grant."
+        },
+        {
+          "info": {
+            "name": "Authenticate with a PKCS1 signature",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app-api.spikeapi.com/v3/auth/pkcs1",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Exchange an RSA PKCS1 signature for a JWT access token."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

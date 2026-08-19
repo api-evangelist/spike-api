@@ -1,0 +1,94 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Spike Application User Auth Provider Records API",
+    "version": "3.0.2"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Provider Records",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Provider Records",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app-api.spikeapi.com/v3/queries/provider_records",
+            "params": [
+              {
+                "name": "start_time",
+                "value": "",
+                "type": "query",
+                "description": "Start of the query window (ISO 8601)."
+              },
+              {
+                "name": "end_time",
+                "value": "",
+                "type": "query",
+                "description": "End of the query window (ISO 8601)."
+              },
+              {
+                "name": "provider",
+                "value": "",
+                "type": "query",
+                "description": "Filter results to a specific provider slug."
+              },
+              {
+                "name": "metric",
+                "value": "",
+                "type": "query",
+                "description": "Metric identifier - for example heartrate, heartrate_resting, hrv_rmssd, hrv_sdnn, glucose, weight, body_fat, spo2, breathing_rate, steps, distance, calories_burned, sleep_duration, sleep_efficiency."
+              }
+            ]
+          },
+          "docs": "Lists normalized provider records for the user, filtered by time range, provider, and metric."
+        },
+        {
+          "info": {
+            "name": "Get Provider Record",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app-api.spikeapi.com/v3/queries/provider_records/:record_id",
+            "params": [
+              {
+                "name": "record_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieves a single normalized provider record by ID, including its metrics."
+        },
+        {
+          "info": {
+            "name": "COMPAT: Query provider records",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app-api.spikeapi.com/v3/queries/provider_record",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Compatibility endpoint that queries provider records via a POST body."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

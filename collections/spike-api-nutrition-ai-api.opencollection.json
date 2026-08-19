@@ -1,0 +1,189 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Spike Application User Auth Nutrition AI API",
+    "version": "3.0.2"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Nutrition AI",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List nutrition records",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app-api.spikeapi.com/v3/nutrition_records",
+            "params": [
+              {
+                "name": "start_time",
+                "value": "",
+                "type": "query",
+                "description": "Start of the query window (ISO 8601)."
+              },
+              {
+                "name": "end_time",
+                "value": "",
+                "type": "query",
+                "description": "End of the query window (ISO 8601)."
+              }
+            ]
+          },
+          "docs": "Lists nutrition records for the user over a time range."
+        },
+        {
+          "info": {
+            "name": "Analyze a food image",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app-api.spikeapi.com/v3/nutrition_records/image",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Analyzes a base64 food image and returns a structured nutrition record."
+        },
+        {
+          "info": {
+            "name": "Analyze a nutrition-facts label",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app-api.spikeapi.com/v3/nutrition_records/ingredients/label",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Analyzes a nutrition-facts label image and returns structured nutrition fields."
+        },
+        {
+          "info": {
+            "name": "Analyze a free-text meal",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app-api.spikeapi.com/v3/nutrition_records/text",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Analyzes a free-text meal description and returns a structured nutrition record."
+        },
+        {
+          "info": {
+            "name": "Upload a manual nutrition record",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app-api.spikeapi.com/v3/nutrition_records/manual",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a nutrition record from manually supplied fields."
+        },
+        {
+          "info": {
+            "name": "Get a nutrition record",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app-api.spikeapi.com/v3/nutrition_records/:nutrition_record_id",
+            "params": [
+              {
+                "name": "nutrition_record_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieves a nutrition record by ID."
+        },
+        {
+          "info": {
+            "name": "Replace a nutrition record",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://app-api.spikeapi.com/v3/nutrition_records/:nutrition_record_id",
+            "params": [
+              {
+                "name": "nutrition_record_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Replaces an existing nutrition record."
+        },
+        {
+          "info": {
+            "name": "Modify a nutrition record",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://app-api.spikeapi.com/v3/nutrition_records/:nutrition_record_id",
+            "params": [
+              {
+                "name": "nutrition_record_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Adjusts a nutrition record, for example changing portion size."
+        },
+        {
+          "info": {
+            "name": "Delete a nutrition record",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://app-api.spikeapi.com/v3/nutrition_records/:nutrition_record_id",
+            "params": [
+              {
+                "name": "nutrition_record_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Removes a nutrition record."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,65 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Spike Application User Auth SDK Push API",
+    "version": "3.0.2"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "SDK Push",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Push Apple Health data",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app-api.spikeapi.com/v3/providers/apple/push",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Ingests Apple Health samples pushed from the Spike iOS SDK (JSON)."
+        },
+        {
+          "info": {
+            "name": "Push Android Health Connect data",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app-api.spikeapi.com/v3/providers/health_connect/push",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Ingests Android Health Connect samples pushed from the Spike Android SDK (JSON)."
+        },
+        {
+          "info": {
+            "name": "Push Samsung Health data (protobuf)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app-api.spikeapi.com/v3/providers/samsung_health_data/push/proto"
+          },
+          "docs": "Ingests Samsung Health samples pushed from the Spike SDK as protobuf."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
