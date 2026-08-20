@@ -41,6 +41,10 @@ apis:
 - aid: spike-api:spike-api-webhooks-api
   name: Spike Webhooks API
   tags:
+  - Webhook
+  - Event
+  - Notification
+  tags_raw:
   - Webhooks
   - Events
   - Notifications
@@ -61,6 +65,8 @@ apis:
   humanURL: https://docs.spikeapi.com/api-docs/authentication
   baseURL: https://app-api.spikeapi.com/v3
   tags:
+  - Authentication
+  tags_raw:
   - Auth
   properties:
   - type: OpenAPI
@@ -511,6 +517,8 @@ apis:
   humanURL: https://docs.spikeapi.com/api-docs/authentication
   baseURL: https://app-api.spikeapi.com/v3
   tags:
+  - User
+  tags_raw:
   - Users
   properties:
   - type: OpenAPI
