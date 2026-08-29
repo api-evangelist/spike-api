@@ -13,6 +13,18 @@ description: Spike (Spike Technologies) provides a unified health and wearables 
   https://app-api.spikeapi.com/v3, with outbound webhooks pushing record-change
   events. Spike also ships mobile SDKs (iOS, Android, Flutter, React Native), a
   Nutrition AI scanner, and an MCP layer for AI-ready health data.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: freemium
   onboarding: self-serve
