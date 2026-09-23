@@ -1,10 +1,7 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
   title: Spike Application User Auth API
-  description: 'Spike (Spike Technologies) unified health and wearables data API. A single integration layer that connects an application to 500+ wearables, IoT devices, CGMs, EMRs, labs, and nutrition sources - Apple Health, Garmin, Fitbit, Oura, Whoop, Dexcom, FreeStyle Libre, Withings, Polar, Suunto, Strava, and more. Applications authenticate their end users with HMAC signatures to mint a JWT access token, connect providers through hosted integration flows, then query normalized health data (sleep, workouts, time series, statistics), analyze nutrition and lab reports, and receive record-change webhooks.
-
-
-    This document is grounded in Spike''s published OpenAPI (v3.0.2) and public documentation at https://docs.spikeapi.com. Path, method, base URL, auth, and provider surfaces are confirmed from the official OpenAPI. Request and response schemas are modeled generically here where full component schemas were not enumerated - see endpointsModeled notes in review.yml.'
+  description: Spike (Spike Technologies) unified health and wearables data API.
   version: 3.0.2
   contact:
     name: Spike Technologies
@@ -98,6 +95,18 @@ components:
           type: string
         message:
           type: string
+    AuthToken:
+      type: object
+      properties:
+        access_token:
+          type: string
+          description: JWT access token to send as a Bearer credential.
+        token_type:
+          type: string
+          example: Bearer
+        expires_in:
+          type: integer
+          description: Token lifetime in seconds.
     HmacAuthRequest:
       type: object
       required:
@@ -115,18 +124,6 @@ components:
         signature:
           type: string
           description: HMAC-SHA256 of the application_user_id signed with the application secret.
-    AuthToken:
-      type: object
-      properties:
-        access_token:
-          type: string
-          description: JWT access token to send as a Bearer credential.
-        token_type:
-          type: string
-          example: Bearer
-        expires_in:
-          type: integer
-          description: Token lifetime in seconds.
   responses:
     Unauthorized:
       description: Missing or invalid access token.

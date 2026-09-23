@@ -1,17 +1,7 @@
 {
   "provider": "spike-api",
   "sources": [
-    "spike-api-auth-api-openapi.yml",
-    "spike-api-lab-reports-api-openapi.yml",
-    "spike-api-nutrition-ai-api-openapi.yml",
-    "spike-api-provider-integrations-api-openapi.yml",
-    "spike-api-provider-records-api-openapi.yml",
-    "spike-api-sdk-push-api-openapi.yml",
-    "spike-api-sleep-api-openapi.yml",
-    "spike-api-statistics-api-openapi.yml",
-    "spike-api-time-series-api-openapi.yml",
-    "spike-api-users-api-openapi.yml",
-    "spike-api-workouts-api-openapi.yml"
+    "_original/spike-api-openapi.yml"
   ],
   "outputs": [
     "spike-api-auth-api-openapi.yml",
@@ -29,6 +19,22 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "spike-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "spike-api-auth-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "spike-api-lab-reports-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "spike-api-nutrition-ai-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "spike-api-provider-integrations-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "spike-api-provider-records-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "spike-api-sdk-push-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "spike-api-sleep-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "spike-api-statistics-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "spike-api-time-series-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "spike-api-users-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "spike-api-workouts-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

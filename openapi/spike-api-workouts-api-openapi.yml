@@ -1,10 +1,7 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Spike Application User Auth Workouts API
-  description: 'Spike (Spike Technologies) unified health and wearables data API. A single integration layer that connects an application to 500+ wearables, IoT devices, CGMs, EMRs, labs, and nutrition sources - Apple Health, Garmin, Fitbit, Oura, Whoop, Dexcom, FreeStyle Libre, Withings, Polar, Suunto, Strava, and more. Applications authenticate their end users with HMAC signatures to mint a JWT access token, connect providers through hosted integration flows, then query normalized health data (sleep, workouts, time series, statistics), analyze nutrition and lab reports, and receive record-change webhooks.
-
-
-    This document is grounded in Spike''s published OpenAPI (v3.0.2) and public documentation at https://docs.spikeapi.com. Path, method, base URL, auth, and provider surfaces are confirmed from the official OpenAPI. Request and response schemas are modeled generically here where full component schemas were not enumerated - see endpointsModeled notes in review.yml.'
+  title: Spike Application User Workouts API
+  description: Spike (Spike Technologies) unified health and wearables data API.
   version: 3.0.2
   contact:
     name: Spike Technologies
@@ -64,23 +61,6 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
-  parameters:
-    EndTime:
-      name: end_time
-      in: query
-      required: false
-      description: End of the query window (ISO 8601).
-      schema:
-        type: string
-        format: date-time
-    StartTime:
-      name: start_time
-      in: query
-      required: false
-      description: Start of the query window (ISO 8601).
-      schema:
-        type: string
-        format: date-time
   responses:
     NotFound:
       description: The requested resource was not found.
@@ -102,6 +82,23 @@ components:
           type: string
         message:
           type: string
+  parameters:
+    EndTime:
+      name: end_time
+      in: query
+      required: false
+      description: End of the query window (ISO 8601).
+      schema:
+        type: string
+        format: date-time
+    StartTime:
+      name: start_time
+      in: query
+      required: false
+      description: Start of the query window (ISO 8601).
+      schema:
+        type: string
+        format: date-time
   securitySchemes:
     bearer:
       type: http
