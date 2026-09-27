@@ -90,26 +90,19 @@ components:
       required: true
       schema:
         type: string
-    ProviderQuery:
-      name: provider
-      in: query
-      required: false
-      description: Filter results to a specific provider slug.
-      schema:
-        type: string
-    EndTime:
-      name: end_time
-      in: query
-      required: false
-      description: End of the query window (ISO 8601).
-      schema:
-        type: string
-        format: date-time
     StartTime:
       name: start_time
       in: query
       required: false
       description: Start of the query window (ISO 8601).
+      schema:
+        type: string
+        format: date-time
+    EndTime:
+      name: end_time
+      in: query
+      required: false
+      description: End of the query window (ISO 8601).
       schema:
         type: string
         format: date-time
@@ -120,15 +113,22 @@ components:
       description: Metric identifier - for example heartrate, heartrate_resting, hrv_rmssd, hrv_sdnn, glucose, weight, body_fat, spo2, breathing_rate, steps, distance, calories_burned, sleep_duration, sleep_efficiency.
       schema:
         type: string
+    ProviderQuery:
+      name: provider
+      in: query
+      required: false
+      description: Filter results to a specific provider slug.
+      schema:
+        type: string
   responses:
-    NotFound:
-      description: The requested resource was not found.
+    Unauthorized:
+      description: Missing or invalid access token.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Missing or invalid access token.
+    NotFound:
+      description: The requested resource was not found.
       content:
         application/json:
           schema:

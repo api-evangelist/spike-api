@@ -86,14 +86,6 @@ components:
           type: string
         message:
           type: string
-  parameters:
-    ProviderSlug:
-      name: provider_slug
-      in: path
-      required: true
-      description: Provider identifier, for example garmin, fitbit, oura, whoop, dexcom, freestyle_libre, withings, polar, suunto, strava, coros, wahoo, ultrahuman, omron_us, omron_eu, huawei, google_fit, google_health, biostrap, luna, map_my_fitness.
-      schema:
-        type: string
   responses:
     NotFound:
       description: The requested resource was not found.
@@ -107,6 +99,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+  parameters:
+    ProviderSlug:
+      name: provider_slug
+      in: path
+      required: true
+      description: Provider identifier, for example garmin, fitbit, oura, whoop, dexcom, freestyle_libre, withings, polar, suunto, strava, coros, wahoo, ultrahuman, omron_us, omron_eu, huawei, google_fit, google_health, biostrap, luna, map_my_fitness.
+      schema:
+        type: string
   securitySchemes:
     bearer:
       type: http
