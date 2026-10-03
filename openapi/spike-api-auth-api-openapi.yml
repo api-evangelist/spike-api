@@ -88,6 +88,18 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   schemas:
+    AuthToken:
+      type: object
+      properties:
+        access_token:
+          type: string
+          description: JWT access token to send as a Bearer credential.
+        token_type:
+          type: string
+          example: Bearer
+        expires_in:
+          type: integer
+          description: Token lifetime in seconds.
     Error:
       type: object
       properties:
@@ -112,18 +124,6 @@ components:
         signature:
           type: string
           description: HMAC-SHA256 of the application_user_id signed with the application secret.
-    AuthToken:
-      type: object
-      properties:
-        access_token:
-          type: string
-          description: JWT access token to send as a Bearer credential.
-        token_type:
-          type: string
-          example: Bearer
-        expires_in:
-          type: integer
-          description: Token lifetime in seconds.
   responses:
     Unauthorized:
       description: Missing or invalid access token.

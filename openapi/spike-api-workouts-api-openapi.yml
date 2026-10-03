@@ -61,33 +61,20 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
-  responses:
-    Unauthorized:
-      description: Missing or invalid access token.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    NotFound:
-      description: The requested resource was not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   parameters:
-    StartTime:
-      name: start_time
-      in: query
-      required: false
-      description: Start of the query window (ISO 8601).
-      schema:
-        type: string
-        format: date-time
     EndTime:
       name: end_time
       in: query
       required: false
       description: End of the query window (ISO 8601).
+      schema:
+        type: string
+        format: date-time
+    StartTime:
+      name: start_time
+      in: query
+      required: false
+      description: Start of the query window (ISO 8601).
       schema:
         type: string
         format: date-time
@@ -99,6 +86,19 @@ components:
           type: string
         message:
           type: string
+  responses:
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid access token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   securitySchemes:
     bearer:
       type: http
