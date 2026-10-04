@@ -100,11 +100,11 @@ components:
       schema:
         type: string
         format: date-time
-    ProviderQuery:
-      name: provider
+    Metric:
+      name: metric
       in: query
       required: false
-      description: Filter results to a specific provider slug.
+      description: Metric identifier - for example heartrate, heartrate_resting, hrv_rmssd, hrv_sdnn, glucose, weight, body_fat, spo2, breathing_rate, steps, distance, calories_burned, sleep_duration, sleep_efficiency.
       schema:
         type: string
     RecordId:
@@ -113,21 +113,13 @@ components:
       required: true
       schema:
         type: string
-    Metric:
-      name: metric
+    ProviderQuery:
+      name: provider
       in: query
       required: false
-      description: Metric identifier - for example heartrate, heartrate_resting, hrv_rmssd, hrv_sdnn, glucose, weight, body_fat, spo2, breathing_rate, steps, distance, calories_burned, sleep_duration, sleep_efficiency.
+      description: Filter results to a specific provider slug.
       schema:
         type: string
-  schemas:
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-        message:
-          type: string
   responses:
     NotFound:
       description: The requested resource was not found.
@@ -141,6 +133,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
   securitySchemes:
     bearer:
       type: http

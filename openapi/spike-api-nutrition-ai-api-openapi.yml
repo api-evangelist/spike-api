@@ -212,31 +212,6 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
-  parameters:
-    EndTime:
-      name: end_time
-      in: query
-      required: false
-      description: End of the query window (ISO 8601).
-      schema:
-        type: string
-        format: date-time
-    StartTime:
-      name: start_time
-      in: query
-      required: false
-      description: Start of the query window (ISO 8601).
-      schema:
-        type: string
-        format: date-time
-  schemas:
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-        message:
-          type: string
   responses:
     NotFound:
       description: The requested resource was not found.
@@ -250,6 +225,31 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+  parameters:
+    StartTime:
+      name: start_time
+      in: query
+      required: false
+      description: Start of the query window (ISO 8601).
+      schema:
+        type: string
+        format: date-time
+    EndTime:
+      name: end_time
+      in: query
+      required: false
+      description: End of the query window (ISO 8601).
+      schema:
+        type: string
+        format: date-time
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
   securitySchemes:
     bearer:
       type: http

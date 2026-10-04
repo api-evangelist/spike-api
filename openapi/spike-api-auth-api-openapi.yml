@@ -100,13 +100,6 @@ components:
         expires_in:
           type: integer
           description: Token lifetime in seconds.
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-        message:
-          type: string
     HmacAuthRequest:
       type: object
       required:
@@ -124,6 +117,13 @@ components:
         signature:
           type: string
           description: HMAC-SHA256 of the application_user_id signed with the application secret.
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
   responses:
     Unauthorized:
       description: Missing or invalid access token.
