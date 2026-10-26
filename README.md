@@ -1,0 +1,188 @@
+# Spike (spike-api)
+
+<!-- API-EVANGELIST-PROVENANCE:BEGIN -->
+> ### About this repository
+>
+> **This is not our API.** This repository is an independent, third-party profile of a company's
+> **publicly available** API surface, maintained by [API Evangelist](https://apievangelist.com).
+> API Evangelist does not operate, host, resell, or support this company's APIs, and is not
+> affiliated with or endorsed by the company unless stated on the profile.
+>
+> **Where the information came from.** Everything here is assembled from material a member of the
+> public can reach with a browser and no credentials — the company's own website, developer portal
+> and documentation, the specifications it publishes for public use (OpenAPI, AsyncAPI, JSON Schema,
+> `apis.json`, `llms.txt` and similar), its public repositories, and its public status, pricing and
+> changelog pages. **Nothing here is obtained by breaching a system, defeating an access control, or
+> using credentials of any kind.**
+>
+> **The rating is an independent assessment.** The Kin Score and Agent Readiness rating are
+> independently calculated scores of a company's *public* API artifacts, produced by API Evangelist
+> against a published rubric. They are not certifications, endorsements, security assessments, or
+> audits, and they score published artifacts — not the quality, safety, or security of the software.
+>
+> **Corrections, re-scores, and removal are free.** No partnership, contract, or purchase is
+> required, and you do not need to justify the request.
+>
+> - **Something wrong?** Open an issue on this repository, or email
+>   [info@apievangelist.com](mailto:info@apievangelist.com).
+> - **Published something new?** Ask for a re-score and we will re-run the rating.
+> - **Want the listing taken down?** Say so and we will honor it. The profile is reduced to your
+>   company name, a factual description, and a link to your own site, and the company is recorded as
+>   **unrated** — never scored zero for having asked.
+>
+> **Response times.** Acknowledgement within **one business day**; removal or restriction within
+> **two business days**; corrections and re-scores within **five business days**.
+>
+> **Not from the company, and here with a question?** You are welcome here — we would rather be the
+> front line and point you the right way than have a good report go nowhere. What this repository
+> can answer is narrow, though, so it is worth knowing who you are actually looking for:
+>
+> - **A question about how the API works, an account, billing, or a bug in the service** — that is
+>   the company's own support, not us. We profile this API; we do not operate it and cannot see
+>   your account.
+> - **A bug in an open-source project we only catalog** — file it on that project's own repository.
+>   This has happened with a real and correct bug report that reached us instead of the people who
+>   could fix it, which helped nobody.
+> - **Anything about this listing itself** — the description, the tags, the rating, a missing or
+>   wrong artifact — is ours. Open an issue here.
+> - **Not sure, or something general about API Evangelist or APIs.io** — open an issue on the
+>   [APIs.io Inbox](https://github.com/api-search/inbox) and we will route it.
+>
+> **This repository contains no software, and we will never ask you to download anything.** There is
+> no build, release, installer, or binary here — only text and machine-readable API descriptions, so
+> there is nothing here that can be "corrupt" or need "repairing". Any issue, comment, or email
+> claiming otherwise and offering a download link is not from us and is hostile. Do not follow the
+> link; it is a lure. Report it to GitHub and, if you like, tell us at
+> [info@apievangelist.com](mailto:info@apievangelist.com) so we can take it down.
+>
+> **On a security or compliance team?** Email
+> [info@apievangelist.com](mailto:info@apievangelist.com) with *security* in the subject line and
+> you will get a person, not a form. We will tell you exactly which public URLs this profile was
+> built from so your team can see the same surface we did, and we will take the listing down on
+> request while you work through it.
+>
+> Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
+<!-- API-EVANGELIST-PROVENANCE:END -->
+
+Spike (Spike Technologies) provides a unified health and wearables data API that connects an application to 500+ wearables, IoT devices, CGMs, EMRs, labs, and nutrition sources through a single integration - aggregating Apple Health, Garmin, Fitbit, Oura, Whoop, Dexcom, Withings, Polar, Suunto, Strava, and more. Developers authenticate end users with HMAC signatures, connect providers via hosted OAuth-style integration flows, then query normalized health data - sleep, workouts, time series metrics (heart rate, HRV, glucose, weight, SpO2, steps), daily and interval statistics, nutrition, and lab reports - over a REST API at `https://app-api.spikeapi.com/v3`, with outbound webhooks pushing record-change events. Spike also ships mobile SDKs (iOS, Android, Flutter, React Native), a Nutrition AI scanner, and an MCP layer for AI-ready health data.
+
+**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/spike-api/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/spike-api/refs/heads/main/apis.yml)
+
+## Tags
+
+- Health Data
+- Wearables
+- Fitness
+- Digital Health
+- Data Aggregation
+- HIPAA
+
+## Timestamps
+
+- **Created:** 2026-07-03
+- **Modified:** 2026-07-03
+
+## APIs
+
+### Spike Authentication API
+
+Authenticate an application's end users and mint a JWT access token. The application signs the application user ID with its secret using HMAC-SHA256 and exchanges the signature at `/auth/hmac` (also `/auth/client_token` and `/auth/pkcs1`); the returned Bearer token authorizes all subsequent requests.
+
+- **Human URL:** [https://docs.spikeapi.com/api-docs/authentication](https://docs.spikeapi.com/api-docs/authentication)
+- **Base URL:** `https://app-api.spikeapi.com/v3`
+
+### Spike Provider Integrations API
+
+Connect and disconnect a user's data providers. Initialize a hosted integration flow (`/providers/{provider_slug}/integration/init` and `/init_url`), receive the provider OAuth callback, and delete an existing integration. Providers include Garmin, Fitbit, Oura, Whoop, Dexcom, FreeStyle Libre, Withings, Polar, Suunto, Strava, Coros, Wahoo, Ultrahuman, Omron, Huawei, Google Fit, and Google Health Connect.
+
+- **Human URL:** [https://docs.spikeapi.com/api-docs/provider_integration](https://docs.spikeapi.com/api-docs/provider_integration)
+- **Base URL:** `https://app-api.spikeapi.com/v3`
+
+### Spike Provider Records API
+
+List and retrieve normalized provider records - the discrete health data samples ingested from a user's connected providers - via `/queries/provider_records`, `/queries/provider_records/{record_id}`, and the compatibility `POST /queries/provider_record`, filtered by time range, provider, and metric.
+
+- **Human URL:** [https://docs.spikeapi.com/api-reference/query-provider-records-list](https://docs.spikeapi.com/api-reference/query-provider-records-list)
+- **Base URL:** `https://app-api.spikeapi.com/v3`
+
+### Spike Sleep API
+
+Query normalized sleep sessions with stage breakdowns (awake, light, deep, REM), duration, and efficiency via `/queries/sleeps` and `/queries/sleeps/{sleep_id}`, unified across every connected provider.
+
+- **Human URL:** [https://docs.spikeapi.com/api-reference/query-sleep-list](https://docs.spikeapi.com/api-reference/query-sleep-list)
+- **Base URL:** `https://app-api.spikeapi.com/v3`
+
+### Spike Workouts API
+
+List and retrieve workouts / physical activities with per-activity metrics (duration, distance, calories, heart rate zones) via `/queries/workouts` and `/queries/workouts/{workout_id}`, normalized across the full activity-type matrix.
+
+- **Human URL:** [https://docs.spikeapi.com/api-reference/query-workouts-list](https://docs.spikeapi.com/api-reference/query-workouts-list)
+- **Base URL:** `https://app-api.spikeapi.com/v3`
+
+### Spike Time Series API
+
+Retrieve high-resolution time series for a specified metric via `/queries/timeseries`, `/queries/timeseries/samples`, and `/queries/timeseries/split` (split by provider source). Metrics include heart rate, resting heart rate, HRV (RMSSD and SDNN), glucose, weight, body fat, SpO2, breathing rate, steps, distance, and calories burned - the surface through which heart-rate, body/weight, and CGM/glucose data are delivered.
+
+- **Human URL:** [https://docs.spikeapi.com/api-reference/query-timeseries](https://docs.spikeapi.com/api-reference/query-timeseries)
+- **Base URL:** `https://app-api.spikeapi.com/v3`
+
+### Spike Statistics API
+
+Compute aggregated statistics for metrics over time - daily rollups (`/queries/statistics/daily`), arbitrary intervals (`/queries/statistics/interval`), and interpolation (`/queries/statistics/interpolation`) - for building dashboards, trends, and Health Insight scores from unified biometric data.
+
+- **Human URL:** [https://docs.spikeapi.com/api-reference/query-statistics-daily](https://docs.spikeapi.com/api-reference/query-statistics-daily)
+- **Base URL:** `https://app-api.spikeapi.com/v3`
+
+### Spike Nutrition AI API
+
+Create, analyze, and manage nutrition records. Analyze a food image (`/nutrition_records/image`), a nutrition-facts label (`/nutrition_records/ingredients/label`), or a free-text meal (`/nutrition_records/text`), log a manual record (`/nutrition_records/manual`), then list, get, modify, replace, or delete records across 29 nutritional fields.
+
+- **Human URL:** [https://docs.spikeapi.com/nutrition-ai/overview](https://docs.spikeapi.com/nutrition-ai/overview)
+- **Base URL:** `https://app-api.spikeapi.com/v3`
+
+### Spike Lab Reports API
+
+Upload lab report documents (base64) for AI extraction, then process, list, and retrieve structured biomarker results via `/lab_reports`, `/lab_reports/process`, and `/lab_reports/{lab_report_id}`.
+
+- **Human URL:** [https://docs.spikeapi.com/lab-reports/overview](https://docs.spikeapi.com/lab-reports/overview)
+- **Base URL:** `https://app-api.spikeapi.com/v3`
+
+### Spike Users API
+
+Retrieve the current authenticated user's information and connected providers (`/userinfo`), user properties (`/userproperties`), and application-level configuration and available providers (`/applicationinfo`).
+
+- **Human URL:** [https://docs.spikeapi.com/api-reference/user-info](https://docs.spikeapi.com/api-reference/user-info)
+- **Base URL:** `https://app-api.spikeapi.com/v3`
+
+### Spike SDK Push API
+
+Ingest on-device health data pushed from the Spike mobile SDKs. The SDK posts Apple Health, Android Health Connect, and Samsung Health samples (JSON and protobuf) via `/providers/apple/push`, `/providers/health_connect/push`, and `/providers/samsung_health_data/push/proto` for normalization into the same query surface.
+
+- **Human URL:** [https://docs.spikeapi.com/api-docs/overview](https://docs.spikeapi.com/api-docs/overview)
+- **Base URL:** `https://app-api.spikeapi.com/v3`
+
+### Spike Webhooks API
+
+Outbound webhook event delivery. After data updates, Spike POSTs a JSON array of events - `record_change`, `provider_integration_created`, and `provider_integration_deleted` - to a webhook URL configured in the admin console, HMAC-SHA256 signed via the `X-Body-Signature` header, with retries (up to 10) on non-200 responses. Delivery is outbound HTTP only; there is no public WebSocket or SSE surface.
+
+- **Human URL:** [https://docs.spikeapi.com/api-docs/webhooks](https://docs.spikeapi.com/api-docs/webhooks)
+- **Base URL:** `https://app-api.spikeapi.com/v3`
+
+## Common Properties
+
+- [GitHub Organization](https://github.com/Spike-API)
+- [LinkedIn](https://www.linkedin.com/company/spike-api)
+- [Website](https://www.spikeapi.com)
+- [Documentation](https://docs.spikeapi.com)
+- [Plans](plans/spike-api-plans-pricing.yml)
+- [Rate Limits](rate-limits/spike-api-rate-limits.yml)
+- [Fin Ops](finops/spike-api-finops.yml)
+
+## Review
+
+Does Spike expose a documented public WebSocket API? **No.** Spike's public surface is a REST API at `https://app-api.spikeapi.com/v3` (Bearer JWT) plus outbound HMAC-signed webhooks. No WebSocket or SSE endpoint is documented. See [review.yml](review.yml).
+
+## Maintainers
+
+**FN:** Kin Lane
+**Email:** kin@apievangelist.com
